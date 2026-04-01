@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "firebase": {
+      "command": "node",
+      "args": ["firebase-mcp-server.js"],
+      "env": {
+        "FIREBASE_PROJECT_ID": "wingmentor-ab3ad",
+        "FIREBASE_CLIENT_EMAIL": "your-service-account@wingmentor-ab3ad.iam.gserviceaccount.com",
+        "FIREBASE_PRIVATE_KEY": "-----BEGIN PRIVATE KEY-----\\nYOUR_PRIVATE_KEY_HERE\\n-----END PRIVATE KEY-----\\n",
+        "FIREBASE_DATABASE_URL": "https://wingmentor-ab3ad-default-rtdb.firebaseio.com"
+      }
+    }
+  }
+}

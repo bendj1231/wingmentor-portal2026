@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "firebase": {
+      "command": "node",
+      "args": [".windsurf/mcp-servers/firebase-mcp-server.js"],
+      "cwd": "."
+    }
+  }
+}

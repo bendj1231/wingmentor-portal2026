@@ -1,0 +1,17 @@
+{
+  "name": "firebase-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Firebase operations",
+  "main": "firebase-mcp-server.js",
+  "scripts": {
+    "start": "node firebase-mcp-server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "@supabase/supabase-js": "^2.99.1",
+    "firebase-admin": "^11.0.0"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

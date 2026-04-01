@@ -1,0 +1,83 @@
+#!/usr/bin/env node
+
+import { spawn } from 'child_process';
+
+console.log('Testing MCP server with environment variables...');
+
+const server = spawn(process.execPath, ['firebase-mcp-server.js'], {
+  env: {
+    FIREBASE_PROJECT_ID: 'wingmentor-ab3ad',
+    FIREBASE_CLIENT_EMAIL: 'firebase-adminsdk-fbsvc@wingmentor-ab3ad.iam.gserviceaccount.com',
+    FIREBASE_PRIVATE_KEY: `-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCuzPHpyn9caZ8T
+jlVt6zMELVR1Rn10rXJgtb6McJYjJPipZTmFEY4xIsCZ5OM3fGr57VF++mf2txKT
+rmef07FPa0LQPpRuxIKb40ZshiOI6LZAsfS2VjlRBjOsmu+bgexJV3HwAsu4bSNG
+m2ivmJvG15IT+jxUtvm/DM7QmM27fOWN8MP0LixDKqRH9G5JKn6nFJSoa7ivgZdi
+23VhzrrPEJ/wADuJsN7+41pgEytzN8fbin3WGQTb4zDTyDkhqYHmlBhjAvjmKH02
+m8Ai73HVY+O8e4V9+dU+W5Sm01XZ67wD3ipImKdkDUeUfgQoN/a1Diw89+KdLolF
+0CWI7QFzAgMBAAECggEAHZJATqvaNfkMV1OZ8jl67Pb6NcjSCn4ZPnEgpkOZsqJb
+itS8EV3x7zAQ4zgMlGNw+Y0DX3bfRaac9uznTOuUMHpV2ELt+3s1GUgursdWlZ/A
+zVsNqhcWJTXmYgnoBSfKoHGxrcfbTPzxnc1GvYYUvGPVq5mGwVIfGAoDpthi3Zew
+1wzb+osKrlq2gvxRUl5zgnW2tz2uxxcmgYI1+489v7rQquVpsn2Wrp3RyTAk/YHo
+EbR0T21Ixig/8I43AXmJkOesWBqTN/ZJTou04iScV0xQz/x43Mic0spm8+vG7swF
+y28MXbUF9P8Z+v90VIhDQKfkLvLQjIiOY1jJJg44iQKBgQDepNq7mwVmbD83Rsta
+OT5tdMDhSY4rj1IZhTXaDjdXO/5xUAYpkTOlNdrUg5TOukIqq9BrvlAhoAN9fSw7
+14bJ4tBIABB0U+SPyC0iExYWzSxU8kduHOnLYl3rrg7ZDNBuCgaNZD9g9zCd2DHg
+LuN9Hd1haa5cv17oxGzx1sEV5wKBgQDI/SKdtXkZHcwSkUr3sRK+86HVYiKRMd/L
+P6XZcbgCFrfAibdTesHGuPld0qiovj/bxQPvgbVZSIy8TUEYAxMntuR1KaO6GtrQ
+qjwzqoqVhX0gLmhwqaWgEwJmQcjgxKI01+dFx1asdcAT+IeLNcoOBALM7iQa/1Xf
+6cAyi45ulQKBgHzowE7AiicMU+sPLMdRllSSTCQYwEpv/f+TXMMZdrLaVcX8v3hS
+nkbyD/NqXvIcTULjYesQuqQiwdKFh2uLX3OkbHX4k0KwTmrcQ3X6f0oLkfOWebyt
+O/1/EnJHFM1xAv65YTOyKlycUgo8YL8Fj1uChdFBGTGvq++rQ/PqKCnBAoGANOiO
+CD4RVs9FPU4KEhIHAUVZQLbIqrgaVYK3wfnxmnsofALEw7D4+bsPyeb+hw0t+khu
+tMnMV2iFw7wCerO0gyveEAmaFA+lsnBd0KwAN0QgoCwXSjEebHkUlJ6UpracjJSZ
+SQEki9mjap5t7/OE8ROVOSUnVAQLMxpxgdzC7dECgYAamzddSgLV89FIswgKqe2b
+jgAj/8p9DQsaXJh1RRNHGJfMe4vPPJp+PDkvppJW3gV+/E+DKqkFk1fyMr2zxDxa
+4Jwdze5IFzPtMrKxFaLZWHDKRA08m9+FN9QsAB6DDNWBs7rr+a3YLbKTTUMq+NHQ
+2rTqcxBM09fhQ35Wxm6yug==
+-----END PRIVATE KEY-----`,
+    FIREBASE_DATABASE_URL: 'https://wingmentor-ab3ad-default-rtdb.firebaseio.com'
+  },
+  stdio: ['pipe', 'pipe', 'pipe']
+});
+
+let output = '';
+let errorOutput = '';
+
+server.stdout.on('data', (data) => {
+  output += data.toString();
+  console.log('STDOUT:', data.toString().trim());
+});
+
+server.stderr.on('data', (data) => {
+  errorOutput += data.toString();
+  console.log('STDERR:', data.toString().trim());
+});
+
+server.on('close', (code) => {
+  console.log(`\nServer exited with code: ${code}`);
+  if (code === 0) {
+    console.log('✅ MCP server started successfully!');
+  } else {
+    console.log('❌ MCP server failed to start');
+    console.log('Error output:', errorOutput);
+  }
+});
+
+// Send a test message after 1 second
+setTimeout(() => {
+  console.log('Sending test message...');
+  const testMessage = JSON.stringify({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "tools/list",
+    params: {}
+  });
+  server.stdin.write(testMessage + '\n');
+}, 1000);
+
+// Kill after 5 seconds
+setTimeout(() => {
+  server.kill();
+  process.exit(0);
+}, 5000);

@@ -1,0 +1,26 @@
+{
+  "name": "firebase",
+  "description": "Firebase MCP server for Firestore and Auth operations",
+  "version": "1.0.0",
+  "server": {
+    "command": "node",
+    "args": ["/Users/bowler/.windsurf/worktrees/wingmentor-foundation-program-main/wingmentor-foundation-program-main-1255c52c/.windsurf/mcp-servers/firebase-mcp-server.js"]
+  },
+  "resources": [
+    {
+      "uri": "firebase://users/{userId}",
+      "name": "User Profile",
+      "description": "Fetch user profile data from Firestore"
+    },
+    {
+      "uri": "firebase://users/{userId}/appAccess",
+      "name": "User App Access",
+      "description": "Get user app access permissions"
+    },
+    {
+      "uri": "firebase://logs/appAccess",
+      "name": "App Access Logs",
+      "description": "Access control change logs"
+    }
+  ]
+}
