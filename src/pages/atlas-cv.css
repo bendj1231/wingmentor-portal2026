@@ -1,0 +1,179 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Atlas CV – ATS-Optimized Stylesheet
+   Single-column linear layout. No tables. No text boxes.
+   Black sans-serif on pure white for maximum ATS & recruiter readability.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Page Container */
+.cv-page-container {
+  background-color: #f4f7f9;
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+/* Paper Surface */
+.cv-paper {
+  background: white !important;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 48px 50px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #000;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.cv-header {
+  text-align: center;
+  border-bottom: 2px solid #000;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+}
+
+.cv-name {
+  font-size: 26px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+.cv-contact {
+  font-size: 13px;
+  margin: 0;
+  color: #000;
+  line-height: 1.6;
+}
+
+/* ── Sections ────────────────────────────────────────────────────────────── */
+.cv-section {
+  margin-bottom: 18px;
+}
+
+.cv-section-title {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-bottom: 1px solid #999;
+  margin: 0 0 10px;
+  padding-bottom: 3px;
+  color: #000;
+}
+
+/* Body text */
+.cv-text {
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0 0 4px;
+}
+
+/* ── ATS-Safe List Items (block-level, no tables) ────────────────────────── */
+.cv-block-list {
+  list-style: disc;
+  margin: 6px 0 0 22px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.cv-block-list li {
+  margin-bottom: 4px;
+}
+
+/* Flight hours & data items – single-column block layout */
+.cv-data-item {
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Job Headers ─────────────────────────────────────────────────────────── */
+.cv-job-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 13px;
+  margin: 0 0 2px;
+}
+
+/* Bullet lists for experience */
+.cv-bullets {
+  list-style: disc;
+  margin: 6px 0 0 22px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.cv-bullets li {
+  margin-bottom: 4px;
+}
+
+/* ── ATS Tip (screen only) ───────────────────────────────────────────────── */
+.ats-tip {
+  margin-top: 28px;
+  font-style: italic;
+  font-size: 12px;
+  color: #666;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRINT RULES – Pure white, no chrome, no tip, perfectly centered
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cv-page-container {
+    padding: 0 !important;
+    background: white !important;
+    min-height: auto !important;
+  }
+
+  .cv-paper {
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0.5in 0.6in !important;
+    border: none !important;
+  }
+
+  .ats-tip {
+    display: none !important;
+  }
+
+  .atlas-cv-toolbar,
+  button,
+  .nav,
+  .dashboard-container > *:not(main) {
+    display: none !important;
+  }
+
+  .dashboard-container {
+    background: white !important;
+    padding: 0 !important;
+  }
+
+  #atlas-cv-document {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0.5in 0.6in !important;
+  }
+
+  @page {
+    margin: 0.4in;
+    size: letter;
+  }
+}
