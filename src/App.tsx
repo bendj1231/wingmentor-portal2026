@@ -1130,7 +1130,7 @@ function App() {
       ) : currentView === 'modules' ? (
         <ModulesPage
           userProfile={authState.userProfile}
-          onBack={() => setCurrentView(moduleReturnView)}
+          onBack={() => setCurrentView('foundational-enrolled')}
           onLaunchPilotGapModule={() => handleViewChange('module-01', 'modules')}
           onLaunchPilotGapModule2={() => handleViewChange('module-02', 'modules')}
           onLaunchModule3={() => handleViewChange('module-03', 'modules')}
