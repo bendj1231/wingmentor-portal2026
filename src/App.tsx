@@ -434,7 +434,7 @@ import { MentorshipSupervisionPage } from './pages/MentorshipSupervisionPage';
 import PilotGapModulePage from './pages/PilotGapModulePage';
 import PilotGapModule2 from './pages/PilotGapModule2';
 import MentorshipProtocolsModulePage from './pages/MentorshipProtocolsModulePage';
-import PeerAdvocacyModulePage from './pages/PeerAdvocacyModulePage';
+import PilotRiskPathwaysModulePage from './pages/PilotRiskPathwaysModulePage';
 import PilotJobDatabasePage from './pages/PilotJobDatabasePage';
 
 const GRAPHICS_PRESET_STORAGE_KEY = 'wm-graphics-preset';
@@ -1123,7 +1123,10 @@ function App() {
       ) : currentView === 'module-02' ? (
         <PilotGapModule2 onBack={() => setCurrentView(moduleReturnView)} />
       ) : currentView === 'module-03' ? (
-        <PeerAdvocacyModulePage onBack={() => setCurrentView(moduleReturnView)} onLogout={handleLogout} />
+        <PilotRiskPathwaysModulePage 
+          onBack={() => setCurrentView(moduleReturnView)} 
+          onComplete={() => handleModuleComplete('module-03')}
+        />
       ) : currentView === 'modules' ? (
         <ModulesPage
           userProfile={authState.userProfile}
