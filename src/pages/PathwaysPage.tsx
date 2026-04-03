@@ -501,7 +501,20 @@ const LiveJobBoard: React.FC = () => {
                 hover:bg-slate-800/80 hover:border-white/20
                 transition-all duration-300 cursor-pointer group"
             >
-              {/* Header */}
+              {/* Header with Logo */}
+              <header className="pt-20 pb-8 px-4 text-center">
+                <div className="mb-4">
+                  <img src="/logo.png" alt="WingMentor" className="h-12 mx-auto" />
+                </div>
+                <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                  Discover Pathways
+                </h1>
+                <p className="mt-2 text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+                  Explore structured career roadmaps designed to guide your journey from student pilot to professional aviation careers.
+                </p>
+              </header>
+
+              {/* Omni-Search Bar */}
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-lg font-bold text-slate-300">
@@ -743,72 +756,48 @@ export const PathwaysPage: React.FC<PathwaysPageProps> = ({
   isDarkMode = true 
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [hasError, setHasError] = useState(false);
 
-  // Debug: log when component mounts
-  useEffect(() => {
-    console.log('PathwaysPage mounted', { userProfile, isDarkMode });
-  }, []);
-
-  if (hasError) {
-    return (
-      <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-bold mb-4">Something went wrong</h2>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600"
-          >
-            Reload Page
-          </button>
-        </div>
-      </div>
-    );
-  }
-
+  // Simple debug render first
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-slate-100" onError={() => setHasError(true)}>
-      {/* Global Styles for Scrollbar Hiding */}
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#0B0F19', 
+      color: '#f8fafc',
+      padding: '20px'
+    }}>
       {/* Debug indicator */}
-      <div className="fixed top-0 left-0 z-[9999] bg-red-500 text-white px-2 py-1 text-xs">
-        PathwaysPage Loaded
+      <div style={{ 
+        backgroundColor: '#ef4444', 
+        color: 'white', 
+        padding: '10px', 
+        marginBottom: '20px',
+        borderRadius: '4px',
+        fontWeight: 'bold'
+      }}>
+        DEBUG: PathwaysPage is rendering!
       </div>
 
-      {/* Omni-Search Bar */}
-      <OmniSearchBar value={searchQuery} onChange={setSearchQuery} />
+      <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Pathways Page</h1>
+      
+      <button 
+        onClick={onBack}
+        style={{
+          padding: '10px 20px',
+          backgroundColor: '#3b82f6',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          marginBottom: '20px'
+        }}
+      >
+        Back to Dashboard
+      </button>
 
-      {/* Main Content */}
-      <main className="pb-20">
-        {/* Live Job Board */}
-        <LiveJobBoard />
-
-        {/* Category Rows with News Injections */}
-        {CATEGORY_SECTIONS.map((section, index) => (
-          <React.Fragment key={section.id}>
-            <CategoryRow section={section} index={index} />
-            
-            {/* Inject News Card after each section */}
-            {NEWS_ITEMS[index] && (
-              <NewsFeedCard item={NEWS_ITEMS[index]} />
-            )}
-          </React.Fragment>
-        ))}
-
-        {/* Final News Item if more news than categories */}
-        {NEWS_ITEMS.length > CATEGORY_SECTIONS.length && (
-          <NewsFeedCard item={NEWS_ITEMS[NEWS_ITEMS.length - 1]} />
-        )}
-      </main>
+      <div style={{ color: '#94a3b8' }}>
+        <p>This is a simplified version for debugging.</p>
+        <p>User Profile: {userProfile ? 'Loaded' : 'Not loaded'}</p>
+      </div>
     </div>
   );
 };
