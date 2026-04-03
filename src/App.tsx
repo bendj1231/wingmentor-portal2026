@@ -8,6 +8,11 @@ import { PilotPortfolioPage } from './pages/PilotPortfolioPage';
 import FoundationalProgramPage from './pages/FoundationalProgramPage';
 import { WingMentorHome, type MainView } from './pages/WingMentorHome';
 import { RecognitionAchievementPage } from './pages/RecognitionAchievementPage';
+import { ModulesPage } from './pages/ModulesPage';
+import { ProgramProgressPage } from './pages/ProgramProgressPage';
+import FoundationalProgramLogbookPage from './pages/FoundationalProgramLogbookPage';
+import { ExaminationPortalPage } from './pages/ExaminationPortalPage';
+import EnrolledFoundationalPage from './pages/EnrolledFoundationalPage';
 import { LoginPage } from './pages/LoginPage';
 import { GraphicsPresetSelector, type DetectionResult, type GraphicsPreset } from './components/GraphicsPresetSelector';
 
@@ -307,34 +312,6 @@ const LoadingScreen: React.FC<{
             </div>
           )}
 
-          {/* Skip option */}
-          {canSkip && onSkip && !error && (
-            <div style={{ textAlign: 'center', marginTop: 'clamp(1rem, 2vw, 1.5rem)' }}>
-              <button
-                onClick={onSkip}
-                style={{
-                  background: 'transparent',
-                  color: '#64748b',
-                  border: '1px solid #e2e8f0',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: 'clamp(0.85rem, 1.5vw, 1rem)',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9';
-                  e.currentTarget.style.color = '#0f172a';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = '#64748b';
-                }}
-              >
-                Skip to Dashboard
-              </button>
-            </div>
-          )}
         </main>
 
         <footer style={{ textAlign: 'center', marginTop: 'auto' }}>
@@ -571,15 +548,20 @@ function App() {
     | 'pilot-profile'
     | 'recognition'
     | 'verification'
-    | 'job-database';
+    | 'job-database'
+    | 'foundational-enrolled'
+    | 'program-progress'
+    | 'examination-portal';
 
   const VIEW_WHITELIST: ViewName[] = [
     'login','hub','dashboard','programs','pathways','applications','foundational','atpl','airtaxi','privatesector',
     'foundational-onboarding','post-enrollment-slideshow','ai-screening','remote-segment','terms-conditions','mentorship',
-    'reset-password','module-01','module-02','module-03','pilot-profile','recognition','verification','job-database'
+    'reset-password','module-01','module-02','module-03','pilot-profile','recognition','verification','job-database',
+    'foundational-enrolled', 'program-progress', 'examination-portal'
   ];
 
   const [currentView, setCurrentView] = useState<ViewName>('login');
+  const [moduleReturnView, setModuleReturnView] = useState<ViewName>('applications');
   const [completedModules, setCompletedModules] = useState<string[]>([]);
   const [lastLoginEmail, setLastLoginEmail] = useState<string | null>(null);
   const [pendingHomeView, setPendingHomeView] = useState<MainView | null>(null);
@@ -634,11 +616,15 @@ function App() {
     setIsDarkMode((prev) => !prev);
   }, []);
 
-  const handleViewChange = (view: ViewName) => {
-    console.log('🔀 View change requested:', view);
+  const handleViewChange = (view: ViewName, returnView?: ViewName) => {
+    console.log('🔀 View change requested:', view, returnView ? `(return to: ${returnView})` : '');
     if (!VIEW_WHITELIST.includes(view)) {
       console.warn('⚠️ Attempted to navigate to unknown view:', view);
       return;
+    }
+    // Store return view for module navigation
+    if (returnView && ['module-01', 'module-02', 'module-03'].includes(view)) {
+      setModuleReturnView(returnView);
     }
     setCurrentView(view);
   };
@@ -908,7 +894,7 @@ function App() {
 
   useEffect(() => {
     if (!showLoading && authState.user && currentView === 'login') {
-      setCurrentView('hub');
+      setCurrentView('applications');
     }
   }, [showLoading, authState.user, currentView]);
 
@@ -1065,13 +1051,13 @@ function App() {
           userProfile={authState.userProfile}
           onStartFoundationalEnrollment={() => setCurrentView('foundational-onboarding')}
           onViewChange={(view) => handleViewChange(view as ViewName)}
-          initialView={pendingHomeView || 'wingmentor-network'}
+          initialView={pendingHomeView || 'applications'}
           isDarkMode={isDarkMode}
           onToggleDarkMode={handleToggleDarkMode}
         />
       ) : currentView === 'foundational' ? (
         <FoundationalProgramPage
-          onBack={() => setCurrentView('hub')}
+          onBack={() => setCurrentView('applications')}
           onLogout={handleLogout}
           onStartEnrollment={() => setCurrentView('foundational-onboarding')}
           onStartSlideshow={() => setCurrentView('post-enrollment-slideshow')}
@@ -1112,29 +1098,73 @@ function App() {
           isDarkMode={isDarkMode}
           onToggleDarkMode={handleToggleDarkMode}
         />
+      ) : currentView === 'applications' ? (
+        <WingMentorHome
+          onLogout={handleLogout}
+          userProfile={authState.userProfile}
+          onStartFoundationalEnrollment={() => setCurrentView('foundational-onboarding')}
+          onViewChange={(view) => handleViewChange(view as ViewName)}
+          initialView='applications'
+          preloadedData={authState.preloadedData}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={handleToggleDarkMode}
+        />
       ) : currentView === 'privatesector' ? (
         <PrivateSectorPage onBack={() => setCurrentView('pathways')} onLogout={handleLogout} />
       ) : currentView === 'mentorship' ? (
-        <PilotGapModule2 onBack={() => setCurrentView('foundational')} />
+        <PilotGapModule2 onBack={() => setCurrentView(moduleReturnView)} />
       ) : currentView === 'module-01' ? (
         <PilotGapModulePage
-          onBack={() => setCurrentView('foundational')}
+          onBack={() => setCurrentView(moduleReturnView)}
           onComplete={() => handleModuleComplete('stage-1')}
           onNavigateToMentorModules={() => setCurrentView('mentorship')}
         />
       ) : currentView === 'module-02' ? (
-        <MentorshipProtocolsModulePage onBack={() => setCurrentView('foundational')} onLogout={handleLogout} />
+        <PilotGapModule2 onBack={() => setCurrentView(moduleReturnView)} />
       ) : currentView === 'module-03' ? (
-        <PeerAdvocacyModulePage onBack={() => setCurrentView('foundational')} onLogout={handleLogout} />
+        <PeerAdvocacyModulePage onBack={() => setCurrentView(moduleReturnView)} onLogout={handleLogout} />
+      ) : currentView === 'modules' ? (
+        <ModulesPage
+          userProfile={authState.userProfile}
+          onBack={() => setCurrentView(moduleReturnView)}
+          onLaunchPilotGapModule={() => handleViewChange('module-01', 'modules')}
+          onLaunchPilotGapModule2={() => handleViewChange('module-02', 'modules')}
+          onLaunchModule3={() => handleViewChange('module-03', 'modules')}
+        />
+      ) : currentView === 'program-progress' ? (
+        <ProgramProgressPage 
+          userProfile={authState.userProfile}
+          onBack={() => setCurrentView(moduleReturnView)}
+          onViewExaminationPortal={() => setCurrentView('examination-portal')}
+        />
+      ) : currentView === 'foundational-logbook' ? (
+        <FoundationalProgramLogbookPage
+          userProfile={authState.userProfile}
+          onBack={() => setCurrentView(moduleReturnView)}
+        />
+      ) : currentView === 'examination-portal' ? (
+        <ExaminationPortalPage
+          userProfile={authState.userProfile}
+          onBack={() => setCurrentView(moduleReturnView)}
+        />
+      ) : currentView === 'foundational-enrolled' ? (
+        <EnrolledFoundationalPage
+          userProfile={authState.userProfile}
+          onBack={() => setCurrentView('applications')}
+          onOpenPortfolio={() => setCurrentView('program-progress')}
+          onViewProgramDetails={() => setCurrentView('foundational')}
+          onOpenModules={() => handleViewChange('modules', 'foundational-enrolled')}
+          onOpenLogbook={() => setCurrentView('foundational-logbook')}
+        />
       ) : currentView === 'pilot-profile' ? (
         <PilotPortfolioPage
-          onBack={() => setCurrentView('hub')}
+          onBack={() => setCurrentView('applications')}
           userProfile={authState.userProfile}
           preloadedPortfolio={authState.preloadedData?.portfolio}
         />
       ) : currentView === 'recognition' ? (
         <RecognitionAchievementPage
-          onBack={() => setCurrentView('hub')}
+          onBack={() => setCurrentView('applications')}
           onViewExams={() => setCurrentView('module-02')}
           onViewAtlas={() => setCurrentView('applications')}
           userProfile={authState.userProfile}
@@ -1152,7 +1182,7 @@ function App() {
               <div style={{ position: 'absolute', top: '0', left: '0' }}>
                 <button
                   className="back-btn"
-                  onClick={() => setCurrentView('hub')}
+                  onClick={() => setCurrentView('applications')}
                   style={{
                     padding: '0.5rem 0',
                     border: 'none',
@@ -1198,7 +1228,7 @@ function App() {
           </main>
         </div>
       ) : currentView === 'job-database' ? (
-        <PilotJobDatabasePage onBack={() => setCurrentView('hub')} onLogout={handleLogout} userProfile={authState.userProfile} />
+        <PilotJobDatabasePage onBack={() => setCurrentView('applications')} onLogout={handleLogout} userProfile={authState.userProfile} />
       ) : (
         <></>
       )}

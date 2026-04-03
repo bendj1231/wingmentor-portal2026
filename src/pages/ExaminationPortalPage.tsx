@@ -307,15 +307,33 @@ export const ExaminationPortalPage: React.FC<ExaminationPortalPageProps> = ({
           onClick={onBack}
           style={{
             marginBottom: '1.25rem',
-            background: 'transparent',
-            border: 'none',
+            background: 'rgba(255, 255, 255, 0.75)',
+            border: '1px solid rgba(255, 255, 255, 0.5)',
+            borderRadius: '12px',
+            padding: '0.75rem 1.25rem',
             color: '#1e40af',
             fontSize: '0.95rem',
             fontWeight: 600,
             cursor: 'pointer',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            boxShadow: '0 4px 20px rgba(15, 23, 42, 0.1)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            transition: 'all 0.2s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.75)';
+            e.currentTarget.style.transform = 'translateY(0)';
           }}
         >
-          ← Back to Program Progress
+          <Icons.ArrowLeft style={{ width: 16, height: 16 }} />
+          Back to Program Progress
         </button>
 
         {/* Single White Card Container */}

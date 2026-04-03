@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Icons } from '../icons';
 
 interface StrategyAdvantage {
@@ -6,29 +6,13 @@ interface StrategyAdvantage {
   highlight?: string;
 }
 
-interface RequiredCredential {
-  label: string;
-  value: string;
-  status: 'met' | 'pending' | 'required';
-}
-
-interface NextMilestone {
-  title: string;
-  description: string;
-  progress: number;
-}
-
 interface PathwayStrategyCard {
   id: string;
-  icon: string;
-  iconBg: string;
-  matchPercentage: number;
-  matchLabel: string;
   title: string;
   subtitle: string;
+  description: string;
+  image: string;
   advantages: StrategyAdvantage[];
-  credentials: RequiredCredential[];
-  nextMilestone: NextMilestone;
   cta: string;
   onClick?: () => void;
 }
@@ -41,40 +25,28 @@ interface PathwayStrategyCarouselProps {
 
 export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = ({
   cards,
-  autoPlay = true,
-  autoPlayInterval = 7000
+  autoPlay = true
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [visibleBullets, setVisibleBullets] = useState<number[]>([]);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goToSlide = useCallback((index: number) => {
-    if (isTransitioning || index === activeIndex) return;
+    if (isTransitioning) return;
     setIsTransitioning(true);
     setVisibleBullets([]);
+    setActiveIndex(index);
     
-    setTimeout(() => {
-      setActiveIndex(index);
-      // Stagger in bullets after slide change
-      const bulletsCount = cards[index]?.advantages.length || 0;
-      const newTimeouts: ReturnType<typeof setTimeout>[] = [];
-      
-      for (let i = 0; i < bulletsCount; i++) {
-        const timeout = setTimeout(() => {
-          setVisibleBullets(prev => [...prev, i]);
-        }, 100 + i * 150);
-        newTimeouts.push(timeout);
-      }
-      
-      timeoutRef.current = setTimeout(() => {
-        setIsTransitioning(false);
-      }, 600);
-      
-      return () => newTimeouts.forEach(t => clearTimeout(t));
-    }, 400);
-  }, [activeIndex, cards, isTransitioning]);
+    const bulletsCount = cards[index]?.advantages?.length || 0;
+    for (let i = 0; i < bulletsCount; i++) {
+      setTimeout(() => {
+        setVisibleBullets(prev => [...prev, i]);
+      }, 50 + i * 80); // Faster animation
+    }
+    
+    setTimeout(() => setIsTransitioning(false), 400);
+  }, [isTransitioning, cards]);
 
   const nextSlide = useCallback(() => {
     const next = (activeIndex + 1) % cards.length;
@@ -86,530 +58,235 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
     goToSlide(prev);
   }, [activeIndex, cards.length, goToSlide]);
 
-  // Auto-play
+  // Auto-play - reduced frequency for performance
   useEffect(() => {
     if (!autoPlay || isPaused) return;
-    const timer = setInterval(nextSlide, autoPlayInterval);
+    const timer = setInterval(nextSlide, 10000); // Increased to 10 seconds
     return () => clearInterval(timer);
-  }, [autoPlay, autoPlayInterval, isPaused, nextSlide]);
+  }, [autoPlay, isPaused, nextSlide]);
 
-  // Initial bullet animation
   useEffect(() => {
+    const bulletsCount = cards[activeIndex]?.advantages?.length || 0;
     setVisibleBullets([]);
-    const bulletsCount = cards[activeIndex]?.advantages.length || 0;
-    const newTimeouts: ReturnType<typeof setTimeout>[] = [];
-    
     for (let i = 0; i < bulletsCount; i++) {
-      const timeout = setTimeout(() => {
+      setTimeout(() => {
         setVisibleBullets(prev => [...prev, i]);
-      }, 300 + i * 150);
-      newTimeouts.push(timeout);
+      }, 100 + i * 150);
     }
-    
-    return () => {
-      newTimeouts.forEach(t => clearTimeout(t));
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
   }, [activeIndex, cards]);
 
   const activeCard = cards[activeIndex];
-
-  const getStatusColor = (status: RequiredCredential['status']) => {
-    switch (status) {
-      case 'met': return '#22c55e';
-      case 'pending': return '#f59e0b';
-      case 'required': return '#ef4444';
-      default: return '#94a3b8';
-    }
-  };
-
-  const getStatusIcon = (status: RequiredCredential['status']) => {
-    switch (status) {
-      case 'met': return '✓';
-      case 'pending': return '⏳';
-      case 'required': return '!';
-      default: return '•';
-    }
-  };
 
   return (
     <div
       style={{
         position: 'relative',
         width: '100%',
-        height: '460px',
-        borderRadius: '28px',
+        height: '360px',
+        borderRadius: '24px',
         overflow: 'hidden',
-        boxShadow: '0 40px 100px rgba(15, 23, 42, 0.25)'
+        boxShadow: '0 20px 60px rgba(15, 23, 42, 0.15)',
+        background: '#ffffff'
       }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Solid Dark Background */}
+      {/* Main Content Container */}
       <div
         style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
-          zIndex: 0
-        }}
-      />
-
-      {/* Main Content Container - overflow hidden to prevent text push-out */}
-      <div
-        style={{
-          position: 'relative',
-          height: '100%',
           display: 'flex',
-          overflow: 'hidden',
-          zIndex: 2
+          height: '100%',
+          width: '100%'
         }}
       >
-        {/* Left Side - Main Strategy Content (max-width 60%, padding-left 5%) */}
+          {/* Left Side - Content (65%) */}
         <div
           style={{
-            width: '60%',
-            maxWidth: '60%',
-            flexShrink: 0,
+            width: '65%',
+            padding: '1.75rem 2rem',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            paddingLeft: '5%',
-            paddingRight: '2rem',
-            paddingTop: '2rem',
-            paddingBottom: '2rem',
-            boxSizing: 'border-box'
+            background: '#ffffff',
+            zIndex: 10
           }}
         >
-          {/* Header with Icon and Match Badge */}
+          {/* Slide Indicators */}
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+            {cards.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                style={{
+                  width: index === activeIndex ? '2rem' : '0.5rem',
+                  height: '0.5rem',
+                  borderRadius: '999px',
+                  border: 'none',
+                  background: index === activeIndex ? '#3b82f6' : '#e2e8f0',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Subtitle Pill */}
           <div
             style={{
-              display: 'flex',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '1rem',
-              marginBottom: '1.75rem'
+              padding: '0.3rem 0.6rem',
+              borderRadius: '999px',
+              background: '#f1f5f9',
+              fontSize: '0.6rem',
+              fontWeight: 600,
+              color: '#64748b',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: '0.75rem',
+              width: 'fit-content',
+              maxWidth: '100%',
+              lineHeight: 1.3
             }}
           >
-            {/* Icon */}
-            <div
-              style={{
-                width: '56px',
-                height: '56px',
-                borderRadius: '16px',
-                background: activeCard.iconBg,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1.75rem',
-                boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
-                flexShrink: 0
-              }}
-            >
-              {activeCard.icon}
-            </div>
+            {activeCard.subtitle}
+          </div>
 
-            {/* Match Badge */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.35rem'
-              }}
-            >
+          {/* Main Title */}
+          <h3
+            style={{
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              color: '#0f172a',
+              margin: '0 0 0.5rem',
+              lineHeight: 1.25
+            }}
+          >
+            {activeCard.title}
+          </h3>
+
+          {/* Description */}
+          <p
+            style={{
+              fontSize: '0.9rem',
+              color: '#64748b',
+              margin: '0 0 1.25rem',
+              lineHeight: 1.5,
+              maxWidth: '100%'
+            }}
+          >
+            {activeCard.description}
+          </p>
+
+          {/* Strategic Advantages as Pills */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            {(activeCard.advantages || []).slice(0, 3).map((advantage, index) => (
               <div
+                key={index}
                 style={{
-                  display: 'inline-flex',
+                  display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.4rem 0.9rem',
+                  gap: '0.4rem',
+                  padding: '0.4rem 0.75rem',
                   borderRadius: '999px',
-                  background: 'rgba(34, 197, 94, 0.2)',
-                  border: '1px solid rgba(34, 197, 94, 0.4)',
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  color: '#4ade80',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
+                  opacity: visibleBullets.includes(index) ? 1 : 0,
+                  transform: visibleBullets.includes(index) ? 'translateY(0)' : 'translateY(10px)',
+                  transition: `opacity 400ms ease ${index * 100}ms, transform 400ms ease ${index * 100}ms`
                 }}
               >
-                <span style={{ fontSize: '0.9rem' }}>★</span>
-                {activeCard.matchPercentage}% Match
-              </div>
-              <span
-                style={{
-                  fontSize: '0.75rem',
-                  color: 'rgba(255,255,255,0.7)',
-                  fontWeight: 500,
-                  marginLeft: '0.5rem',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                }}
-              >
-                {activeCard.matchLabel}
-              </span>
-            </div>
-          </div>
-
-          {/* Title and Subtitle */}
-          <div style={{ marginBottom: '1.75rem' }}>
-            <h3
-              style={{
-                fontSize: '2rem',
-                fontWeight: 700,
-                color: '#ffffff',
-                margin: '0 0 0.75rem',
-                lineHeight: 1.2,
-                textShadow: '0 2px 12px rgba(0,0,0,0.4)',
-                opacity: isTransitioning ? 0 : 1,
-                transform: isTransitioning ? 'translateY(-10px)' : 'translateY(0)',
-                transition: 'opacity 400ms ease, transform 400ms ease'
-              }}
-            >
-              {activeCard.title}
-            </h3>
-            <p
-              style={{
-                fontSize: '1.05rem',
-                color: 'rgba(255,255,255,0.85)',
-                margin: 0,
-                fontWeight: 500,
-                lineHeight: 1.5,
-                opacity: isTransitioning ? 0 : 1,
-                transform: isTransitioning ? 'translateY(-10px)' : 'translateY(0)',
-                transition: 'opacity 400ms ease 50ms, transform 400ms ease 50ms'
-              }}
-            >
-              {activeCard.subtitle}
-            </p>
-          </div>
-
-          {/* Strategic Advantages - FIXED: contained within safe area */}
-          <div style={{ marginBottom: '1rem', width: '100%' }}>
-            <p
-              style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                color: 'rgba(255,255,255,0.5)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.25em',
-                marginBottom: '1.5rem',
-                marginLeft: '0.25rem',
-                textShadow: '0 1px 2px rgba(0,0,0,0.5)'
-              }}
-            >
-              Strategic Advantages
-            </p>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1.25rem',
-                width: '100%'
-              }}
-            >
-              {activeCard.advantages.map((advantage, index) => (
-                <div
-                  key={index}
+                <span
                   style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '0.75rem',
-                    opacity: visibleBullets.includes(index) ? 1 : 0,
-                    transform: visibleBullets.includes(index) 
-                      ? 'translateX(0)' 
-                      : 'translateX(-20px)',
-                    transition: `opacity 400ms ease ${index * 100}ms, transform 400ms ease ${index * 100}ms`,
-                    width: '100%',
+                    width: '5px',
+                    height: '5px',
+                    borderRadius: '50%',
+                    background: '#3b82f6',
                     flexShrink: 0
                   }}
+                />
+                <span
+                  style={{
+                    fontSize: '0.8rem',
+                    fontWeight: 500,
+                    color: '#475569',
+                    whiteSpace: 'nowrap'
+                  }}
                 >
-                  <span
-                    style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      background: '#3b82f6',
-                      marginTop: '0.6rem',
-                      flexShrink: 0,
-                      boxShadow: '0 0 10px rgba(59, 130, 246, 0.6)'
-                    }}
-                  />
-                  {/* FIXED: Strictly stacked flex-col layout with text containment */}
-                  <div style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    gap: '0.25rem',
-                    flex: 1,
-                    minWidth: 0,
-                    overflow: 'hidden'
-                  }}>
-                    <span
-                      style={{
-                        fontSize: '1.1rem',
-                        fontWeight: 700,
-                        color: '#ffffff',
-                        lineHeight: 1.2,
-                        textShadow: '0 2px 4px rgba(0,0,0,0.5)',
-                        wordWrap: 'break-word',
-                        overflowWrap: 'break-word'
-                      }}
-                    >
-                      {advantage.text}
-                    </span>
-                    {advantage.highlight && (
-                      <span
-                        style={{
-                          fontSize: '0.9rem',
-                          fontWeight: 500,
-                          color: 'rgba(147, 197, 253, 0.8)',
-                          lineHeight: 1.3,
-                          wordWrap: 'break-word',
-                          overflowWrap: 'break-word'
-                        }}
-                      >
-                        {advantage.highlight}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+                  {advantage.text}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Right Side - Smokey Glass Sidebar (40%, Flush to edge) */}
+        {/* Right Side - Image (35%) */}
         <div
           style={{
-            width: '40%',
-            maxWidth: '40%',
-            flexShrink: 0,
-            background: 'rgba(2, 6, 23, 0.4)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
-            padding: '2.5rem',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            boxShadow: 'inset 1px 0 0 rgba(255,255,255,0.05), -10px 0 40px rgba(0,0,0,0.3)',
-            boxSizing: 'border-box'
+            width: '35%',
+            position: 'relative',
+            overflow: 'hidden'
           }}
         >
-          <div>
-            <p
-              style={{
-                fontSize: '0.65rem',
-                fontWeight: 700,
-                color: 'rgba(148, 163, 184, 0.8)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.2em',
-                marginBottom: '1.5rem',
-                textAlign: 'center'
-              }}
-            >
-              Required Credentials
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {activeCard.credentials.map((credential, index) => (
-                <div
-                  key={index}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '0.6rem 0.875rem',
-                    background: 'rgba(255,255,255,0.08)',
-                    borderRadius: '10px',
-                    border: `1px solid ${getStatusColor(credential.status)}40`,
-                    opacity: isTransitioning ? 0 : 1,
-                    transform: isTransitioning ? 'translateX(20px)' : 'translateX(0)',
-                    transition: `opacity 400ms ease ${300 + index * 100}ms, transform 400ms ease ${300 + index * 100}ms`
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '0.8rem',
-                      color: 'rgba(255,255,255,0.9)',
-                      fontWeight: 500
-                    }}
-                  >
-                    {credential.label}
-                  </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <span
-                      style={{
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        color: getStatusColor(credential.status)
-                      }}
-                    >
-                      {credential.value}
-                    </span>
-                    <span style={{ fontSize: '0.7rem', color: getStatusColor(credential.status) }}>
-                      {getStatusIcon(credential.status)}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Divider */}
+          {/* Background Image - Static for performance */}
           <div
             style={{
-              height: '1px',
-              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)'
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `url(${activeCard.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              zIndex: 0
+            }}
+          />
+          
+          {/* Left Fade Overlay */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to right, #ffffff 0%, transparent 25%)'
             }}
           />
 
-          {/* Next Milestone */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <p
-              style={{
-                fontSize: '0.65rem',
-                fontWeight: 700,
-                color: 'rgba(148, 163, 184, 0.8)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.2em',
-                marginBottom: '1.5rem',
-                textAlign: 'center'
-              }}
-            >
-              Next Milestone
-            </p>
-            <div
-              style={{
-                padding: '1.25rem',
-                background: 'rgba(30, 41, 59, 0.5)',
-                borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                opacity: isTransitioning ? 0 : 1,
-                transform: isTransitioning ? 'translateY(10px)' : 'translateY(0)',
-                transition: 'opacity 400ms ease 500ms, transform 400ms ease 500ms'
-              }}
-            >
-              <p
-                style={{
-                  fontSize: '1rem',
-                  fontWeight: 700,
-                  color: '#ffffff',
-                  margin: '0 0 0.5rem',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                }}
-              >
-                {activeCard.nextMilestone.title}
-              </p>
-              <p
-                style={{
-                  fontSize: '0.85rem',
-                  color: 'rgba(148, 163, 184, 0.9)',
-                  margin: '0 0 1rem',
-                  lineHeight: 1.5
-                }}
-              >
-                {activeCard.nextMilestone.description}
-              </p>
-              {/* Progress Bar */}
-              <div
-                style={{
-                  height: '4px',
-                  background: 'rgba(255,255,255,0.1)',
-                  borderRadius: '999px',
-                  overflow: 'hidden'
-                }}
-              >
-                <div
-                  style={{
-                    height: '100%',
-                    width: `${activeCard.nextMilestone.progress}%`,
-                    background: 'linear-gradient(90deg, #3b82f6, #60a5fa)',
-                    borderRadius: '999px',
-                    transition: 'width 800ms ease 600ms',
-                    boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)'
-                  }}
-                />
-              </div>
-              <p
-                style={{
-                  fontSize: '0.7rem',
-                  color: 'rgba(148, 163, 184, 0.7)',
-                  margin: '0.75rem 0 0',
-                  textAlign: 'right'
-                }}
-              >
-                {activeCard.nextMilestone.progress}% Complete
-              </p>
-            </div>
-          </div>
-
-          {/* Discover Pathway CTA Button */}
+          {/* Navigation Arrow on Image */}
           <button
-            onClick={activeCard.onClick}
+            onClick={nextSlide}
             style={{
-              width: '100%',
-              padding: '1rem 1.5rem',
-              borderRadius: '14px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              background: 'rgba(59, 130, 246, 0.8)',
-              backdropFilter: 'blur(10px)',
-              color: '#ffffff',
-              fontSize: '0.95rem',
-              fontWeight: 700,
+              position: 'absolute',
+              right: '1.5rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '3rem',
+              height: '3rem',
+              borderRadius: '50%',
+              border: '1px solid rgba(255,255,255,0.3)',
+              background: 'rgba(255,255,255,0.9)',
+              color: '#0f172a',
               cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 10px 25px rgba(37, 99, 235, 0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
-              opacity: isTransitioning ? 0 : 1,
-              transform: isTransitioning ? 'translateY(10px)' : 'translateY(0)',
-              transitionDelay: '600ms'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 20,
+              boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+              transition: 'all 0.3s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(59, 130, 246, 0.95)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 15px 35px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255,255,255,0.3)';
+              e.currentTarget.style.background = '#ffffff';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(59, 130, 246, 0.8)';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.3), inset 0 1px 0 rgba(255,255,255,0.2)';
+              e.currentTarget.style.background = 'rgba(255,255,255,0.9)';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
             }}
           >
-            {activeCard.cta}
+            <Icons.ChevronRight style={{ width: 20, height: 20 }} />
           </button>
+
         </div>
       </div>
 
-      {/* Slide Indicators */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '1.5rem',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          gap: '0.5rem',
-          zIndex: 20
-        }}
-      >
-        {cards.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            style={{
-              width: index === activeIndex ? '2rem' : '0.5rem',
-              height: '0.5rem',
-              borderRadius: '999px',
-              border: 'none',
-              background: index === activeIndex 
-                ? 'rgba(255,255,255,0.95)' 
-                : 'rgba(255,255,255,0.4)',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease'
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Navigation Arrows */}
+      {/* Previous Arrow - Left Side */}
       <button
         onClick={prevSlide}
         style={{
@@ -620,62 +297,27 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
           width: '3rem',
           height: '3rem',
           borderRadius: '50%',
-          border: '1px solid rgba(255,255,255,0.25)',
-          background: 'rgba(255,255,255,0.15)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          color: 'rgba(255,255,255,0.9)',
+          border: '1px solid #e2e8f0',
+          background: '#ffffff',
+          color: '#64748b',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 20,
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
           transition: 'all 0.3s ease'
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
-          e.currentTarget.style.color = '#fff';
+          e.currentTarget.style.color = '#0f172a';
+          e.currentTarget.style.borderColor = '#cbd5e1';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
-          e.currentTarget.style.color = 'rgba(255,255,255,0.9)';
+          e.currentTarget.style.color = '#64748b';
+          e.currentTarget.style.borderColor = '#e2e8f0';
         }}
       >
         <Icons.ChevronLeft style={{ width: 20, height: 20 }} />
-      </button>
-
-      <button
-        onClick={nextSlide}
-        style={{
-          position: 'absolute',
-          right: 'calc(40% + 1rem)',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: '3rem',
-          height: '3rem',
-          borderRadius: '50%',
-          border: '1px solid rgba(255,255,255,0.25)',
-          background: 'rgba(255,255,255,0.15)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          color: 'rgba(255,255,255,0.9)',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 20,
-          transition: 'all 0.3s ease'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
-          e.currentTarget.style.color = '#fff';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
-          e.currentTarget.style.color = 'rgba(255,255,255,0.9)';
-        }}
-      >
-        <Icons.ChevronRight style={{ width: 20, height: 20 }} />
       </button>
     </div>
   );

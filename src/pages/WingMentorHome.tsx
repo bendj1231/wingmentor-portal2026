@@ -19,7 +19,7 @@ import AtlasResumePage from './AtlasResumePage';
 import FullAtlasResumePage from './FullAtlasResumePage';
 import PrintableResumePage from './PrintableResumePage';
 import { DigitalLogbookPage } from './DigitalLogbookPage';
-import { MentorLogbookPage } from './MentorLogbookPage';
+import MentorLogbookPage from './FoundationalProgramLogbookPage';
 import PilotLicensureExperiencePage from './PilotLicensureExperiencePage';
 import { PathwayCarousel } from '../components/PathwayCarousel';
 import { getUserTrack, getTrackConfig, canAccessPage, getRedirectPage } from '../config/accessControl';
@@ -194,7 +194,7 @@ interface WingMentorHomeProps {
   onLogout: () => void;
   userProfile?: UserProfile | null;
   onStartFoundationalEnrollment?: () => void;
-  onViewChange?: (view: string) => void;
+  onViewChange?: (view: string, returnView?: string) => void;
   initialView?: MainView;
   isDarkMode?: boolean;
   onToggleDarkMode?: () => void;
@@ -231,7 +231,7 @@ export type MainView =
   | 'examination-results'
   | 'logbook'
   | 'digital-logbook'
-  | 'mentor-logbook'
+  | 'foundational-logbook'
   | 'pilot-licensure-experience'
   | 'atlas-resume'
   | 'printable-resume'
@@ -1975,79 +1975,59 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
         </button>
 
         {/* Programs Header - Matching Dashboard Format */}
-        <div className="dashboard-header" style={{ marginBottom: '3rem', padding: '2rem 2rem 0 2rem' }}>
-          <div style={{ marginBottom: '2rem', marginTop: '0.5rem' }}>
-            <img src="/logo.png" alt="WingMentor Logo" style={{ maxWidth: '260px', height: 'auto', objectFit: 'contain' }} />
-          </div>
-          
-          <div style={{ color: '#2563eb', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1rem' }}>
-            Connecting Pilots to the Industry
-          </div>
-          
-          <h1 style={{ 
-            fontFamily: 'Georgia, serif', 
-            fontSize: 'clamp(2rem, 5vw, 3.25rem)', 
-            fontWeight: 400, 
-            color: '#0f172a', 
-            marginBottom: '1rem', 
-            letterSpacing: '-0.02em', 
-            lineHeight: 1.15 
-          }}>
-            Programs
-          </h1>
-          
-          <p style={{ 
-            color: '#64748b', 
-            fontSize: '1.15rem', 
-            lineHeight: 1.7, 
-            maxWidth: '36rem', 
-            margin: '0 auto',
-            padding: '0 1rem'
-          }}>
-            Access Foundational and Transition mentorship programs designed to refine your core mechanics and CRM skills through high-fidelity simulator practice.
-          </p>
-        </div>
-
-        <div style={{ padding: '0 2rem 2rem 2rem' }}>
-          {/* Programs Welcome Card */}
+        <div style={{ padding: '2rem 2rem 0 2rem', textAlign: 'center', maxWidth: '100%', margin: '0 auto' }}>
           <div style={{
-            background: 'white',
+            background: isDarkMode 
+              ? 'linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(15, 23, 42, 0.95) 70%, rgba(15, 23, 42, 0) 100%)'
+              : 'linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 70%, rgba(255, 255, 255, 0) 100%)',
             borderRadius: '16px',
-            padding: '2rem',
-            marginBottom: '2rem',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-            borderLeft: '4px solid #0ea5e9'
+            padding: '3rem 3rem 4rem 3rem',
+            boxShadow: isDarkMode
+              ? '0 20px 60px rgba(0, 0, 0, 0.3), 0 -10px 40px rgba(15, 23, 42, 0.3)'
+              : '0 20px 60px rgba(15, 23, 42, 0.08), 0 -10px 40px rgba(255, 255, 255, 0.5)',
+            border: isDarkMode 
+              ? '1px solid rgba(71, 85, 105, 0.6)' 
+              : '1px solid rgba(255, 255, 255, 0.6)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            maxWidth: '1200px',
+            margin: '0 auto',
+            position: 'relative'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '12px',
-                background: 'linear-gradient(135deg, #0ea5e9, #0284c7)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontSize: '1.5rem'
-              }}>
-                ✈️
-              </div>
-              <div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1e293b', margin: 0 }}>
-                  Welcome to Your Training Programs
-                </h2>
-                <p style={{ color: '#64748b', margin: '0.25rem 0 0 0' }}>
-                  Choose from our comprehensive mentorship programs designed to advance your aviation career
-                </p>
-              </div>
+            <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+              <img src="/logo.png" alt="WingMentor Logo" style={{ maxWidth: '200px' }} />
             </div>
+            <div style={{ color: isDarkMode ? '#60a5fa' : '#2563eb', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1rem' }}>
+              Connecting Pilots to the Industry
+            </div>
+            <h1 style={{ 
+              fontFamily: 'Georgia, serif', 
+              fontSize: 'clamp(2rem, 5vw, 3.25rem)', 
+              fontWeight: 400, 
+              color: isDarkMode ? '#f8fafc' : '#0f172a', 
+              marginBottom: '1rem', 
+              letterSpacing: '-0.02em', 
+              lineHeight: 1.15 
+            }}>
+              Programs
+            </h1>
+            <p style={{ 
+              color: isDarkMode ? '#94a3b8' : '#64748b', 
+              fontSize: '1.15rem', 
+              lineHeight: 1.7, 
+              maxWidth: '36rem', 
+              margin: '0 auto',
+              padding: '0 1rem'
+            }}>
+              Access Foundational and Transition mentorship programs designed to refine your core mechanics and CRM skills through high-fidelity simulator practice.
+            </p>
           </div>
         </div>
 
-        <section className="dashboard-section" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+        <section className="dashboard-section" style={{ width: '100%', maxWidth: '1200px', margin: '2rem auto 0' }}>
           <div style={{ padding: '0 3rem 2rem 3rem' }}>
             {/* Program Selection Subheader */}
-            <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+            <div style={{ marginBottom: '2rem', marginTop: '1rem', textAlign: 'center' }}>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#475569', marginBottom: '0.5rem' }}>
                 Select Your Program
               </h2>
@@ -2187,7 +2167,9 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
               <div style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 30%)',
+                background: isDarkMode 
+                  ? 'linear-gradient(90deg, rgba(15, 23, 42, 1) 0%, rgba(15, 23, 42, 0) 30%)'
+                  : 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 30%)',
                 pointerEvents: 'none'
               }} />
               <div style={{
@@ -2345,7 +2327,9 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                 <div style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 30%)',
+                  background: isDarkMode 
+                    ? 'linear-gradient(90deg, rgba(15, 23, 42, 1) 0%, rgba(15, 23, 42, 0) 30%)'
+                    : 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 30%)',
                   pointerEvents: 'none'
                 }} />
                 <div style={{
@@ -2380,22 +2364,22 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                 pointerEvents: 'none'
               }} />
               <div style={{
-                background: 'rgba(255, 255, 255, 0.9)',
+                background: isDarkMode ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
                 borderRadius: '24px',
-                boxShadow: '0 20px 40px rgba(15, 23, 42, 0.12)',
-                border: '1px solid rgba(255, 255, 255, 0.8)',
+                boxShadow: isDarkMode ? '0 20px 40px rgba(0, 0, 0, 0.3)' : '0 20px 40px rgba(15, 23, 42, 0.12)',
+                border: isDarkMode ? '1px solid rgba(71, 85, 105, 0.8)' : '1px solid rgba(255, 255, 255, 0.8)',
                 padding: '2rem',
                 position: 'relative',
                 overflow: 'hidden'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
                   <div>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#0f172a', margin: 0 }}>Program Updates & News</h3>
-                    <p style={{ fontSize: '0.875rem', color: '#64748b', margin: '0.35rem 0 0' }}>Stay current with the latest program headlines.</p>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: isDarkMode ? '#f8fafc' : '#0f172a', margin: 0 }}>Program Updates & News</h3>
+                    <p style={{ fontSize: '0.875rem', color: isDarkMode ? '#94a3b8' : '#64748b', margin: '0.35rem 0 0' }}>Stay current with the latest program headlines.</p>
                   </div>
-                  <span style={{ fontSize: '0.85rem', color: '#2563eb', fontWeight: 600 }}>Updated moments ago</span>
+                  <span style={{ fontSize: '0.85rem', color: isDarkMode ? '#60a5fa' : '#2563eb', fontWeight: 600 }}>Updated moments ago</span>
                 </div>
                 <div style={{ position: 'relative', overflow: 'hidden' }}>
                   <div
@@ -2413,16 +2397,18 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                           minWidth: '100%',
                           padding: '1rem',
                           borderRadius: '12px',
-                          background: '#f8fafc',
-                          border: '1px solid #e2e8f0',
+                          background: isDarkMode ? 'rgba(51, 65, 85, 0.6)' : '#f8fafc',
+                          border: isDarkMode ? '1px solid rgba(71, 85, 105, 0.5)' : '1px solid #e2e8f0',
+                          backdropFilter: isDarkMode ? 'blur(8px)' : 'none',
+                          WebkitBackdropFilter: isDarkMode ? 'blur(8px)' : 'none',
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                           <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2563eb' }} />
-                          <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#0f172a' }}>{update.title}</h4>
+                          <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: isDarkMode ? '#f8fafc' : '#0f172a' }}>{update.title}</h4>
                         </div>
-                        <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem', lineHeight: 1.5 }}>{update.summary}</p>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.75rem', fontSize: '0.8rem', color: '#94a3b8' }}>
+                        <p style={{ margin: 0, color: isDarkMode ? '#cbd5e1' : '#64748b', fontSize: '0.9rem', lineHeight: 1.5 }}>{update.summary}</p>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.75rem', fontSize: '0.8rem', color: isDarkMode ? '#94a3b8' : '#94a3b8' }}>
                           <span>{update.source}</span>
                           <span>{update.date}</span>
                         </div>
@@ -4171,7 +4157,7 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
     );
   };
 
-  const WingMentorNetworkView = ({ onBack, onViewChange }: { onBack: () => void; onViewChange?: (view: string) => void }) => {
+  const WingMentorNetworkView = ({ onBack, onViewChange }: { onBack: () => void; onViewChange?: (view: string, returnView?: string) => void }) => {
     return (
     <div
       className="dashboard-container animate-fade-in"
@@ -4489,15 +4475,21 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
             onBack={() => setMainView('dashboard')} 
             onViewLogbook={() => setMainView('logbook')}
             onViewDigitalLogbook={() => setMainView('digital-logbook')}
-            onViewMentorLogbook={() => setMainView('mentor-logbook')}
+            onViewMentorLogbook={() => setMainView('foundational-logbook')}
             onViewAtlas={() => setMainView('atlas-resume')}
             onViewRecognition={() => setMainView('recognition')}
             onViewPrograms={() => setMainView('programs')}
             onViewPathways={() => setMainView('pathways')}
-            onViewExamination={() => setMainView('examination-portal')}
-            onViewFoundationalProgram={() => setMainView('foundational-enrolled')}
+            onViewExamination={() => setMainView('examination-results')}
+            onViewFoundationalProgram={() => setMainView('applications')}
             onViewFoundationalEnrollment={() => setMainView('foundational')}
-            onViewLicensureExperience={() => setMainView('pilot-licensure-experience')} 
+            onViewLicensureExperience={() => setMainView('pilot-licensure-experience')}
+            onViewJobDatabase={() => onViewChange?.('job-database')}
+            onViewModule01={() => onViewChange?.('module-01', 'applications')}
+            onViewModule02={() => onViewChange?.('module-02', 'applications')}
+            onViewExaminationPortal={() => onViewChange?.('examination-portal')}
+            onViewFoundationalPlatform={() => onViewChange?.('foundational-enrolled')}
+            isDarkMode={isDarkMode}
           />
         );
       case 'recognition':
@@ -4517,22 +4509,26 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
             onBack={() => setMainView('dashboard')} 
             onViewLogbook={() => setMainView('logbook')}
             onViewDigitalLogbook={() => setMainView('digital-logbook')}
-            onViewMentorLogbook={() => setMainView('mentor-logbook')}
+            onViewMentorLogbook={() => setMainView('foundational-logbook')}
             onViewAtlas={() => setMainView('atlas-resume')}
             onViewRecognition={() => setMainView('recognition')}
             onViewPrograms={() => setMainView('programs')}
             onViewPathways={() => setMainView('pathways')}
-            onViewExamination={() => setMainView('examination-portal')}
-            onViewFoundationalProgram={() => setMainView('foundational-enrolled')}
+            onViewExamination={() => setMainView('examination-results')}
+            onViewFoundationalProgram={() => setMainView('applications')}
             onViewFoundationalEnrollment={() => setMainView('foundational')}
-            onViewLicensureExperience={() => setMainView('pilot-licensure-experience')} 
+            onViewLicensureExperience={() => setMainView('pilot-licensure-experience')}
+            onViewModule01={() => onViewChange?.('module-01', 'pilot-portfolio')}
+            onViewModule02={() => onViewChange?.('module-02', 'pilot-portfolio')}
+            onViewExaminationPortal={() => onViewChange?.('examination-portal')}
+            onViewFoundationalPlatform={() => onViewChange?.('foundational-enrolled')}
           />
         );
       case 'logbook':
         return <LogbookPage onBack={() => setMainView('pilot-portfolio')} userProfile={userProfile} />;
       case 'digital-logbook':
         return <DigitalLogbookPage onBack={() => setMainView('pilot-portfolio')} userProfile={userProfile ?? undefined} />;
-      case 'mentor-logbook':
+      case 'foundational-logbook':
         return <MentorLogbookPage onBack={() => setMainView('pilot-portfolio')} userProfile={userProfile ?? undefined} />;
       case 'pilot-licensure-experience':
         return <PilotLicensureExperiencePage onBack={() => setMainView('pilot-portfolio')} userProfile={userProfile ?? undefined} />;
@@ -4571,29 +4567,8 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
             onBack={() => setMainView('programs')}
             onOpenPortfolio={() => setMainView('program-progress')}
             onViewProgramDetails={() => setMainView('foundational')}
-            onOpenModules={() => setMainView('modules')}
+            onOpenModules={() => onViewChange?.('modules', 'foundational-enrolled')}
             onOpenLogbook={() => setMainView('foundational-logbook')}
-          />
-        );
-
-      case 'program-progress':
-        return (
-          <ProgramProgressPage
-            userProfile={userProfile}
-            onBack={() => setMainView('foundational-enrolled')}
-            onViewExaminationPortal={() => setMainView('examination-portal')}
-            onViewSyllabus={() => setMainView('program-syllabus')}
-          />
-        );
-
-      case 'modules':
-        return (
-          <ModulesPage
-            userProfile={userProfile}
-            onBack={() => setMainView('foundational-enrolled')}
-            onLaunchPilotGapModule={() => onViewChange?.('module-01')}
-            onLaunchPilotGapModule2={() => onViewChange?.('module-02')}
-            onLaunchModule3={() => onViewChange?.('module-03')}
           />
         );
 
@@ -4756,14 +4731,6 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
               }
             `}</style>
           </div>
-        );
-
-      case 'foundational-logbook':
-        return (
-          <FoundationalProgramLogbookPage
-            userProfile={userProfile}
-            onBack={() => setMainView('foundational-enrolled')}
-          />
         );
 
       case 'examination-portal':

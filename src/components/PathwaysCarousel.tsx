@@ -27,6 +27,7 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [visibleBullets, setVisibleBullets] = useState<number[]>([]);
+  const [showDirectory, setShowDirectory] = useState(false);
 
   const goToSlide = useCallback((index: number) => {
     if (isTransitioning) return;
@@ -34,15 +35,15 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
     setVisibleBullets([]);
     setActiveIndex(index);
     
-    // Stagger in bullets after slide change
+    // Stagger in bullets after slide change - reduced animations
     const bulletsCount = cards[index]?.advantages?.length || 0;
     for (let i = 0; i < bulletsCount; i++) {
       setTimeout(() => {
         setVisibleBullets(prev => [...prev, i]);
-      }, 100 + i * 150);
+      }, 50 + i * 80); // Faster animation
     }
     
-    setTimeout(() => setIsTransitioning(false), 800);
+    setTimeout(() => setIsTransitioning(false), 400); // Reduced from 800ms
   }, [isTransitioning, cards]);
 
   const nextSlide = useCallback(() => {
@@ -55,10 +56,10 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
     goToSlide(prev);
   }, [activeIndex, cards.length, goToSlide]);
 
-  // Auto-play
+  // Auto-play - reduced frequency for performance
   useEffect(() => {
     if (!autoPlay || isPaused) return;
-    const timer = setInterval(nextSlide, autoPlayInterval);
+    const timer = setInterval(nextSlide, 10000); // Increased to 10 seconds
     return () => clearInterval(timer);
   }, [autoPlay, autoPlayInterval, isPaused, nextSlide]);
 
@@ -88,7 +89,7 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Background Image with Ken Burns */}
+      {/* Background Image - Static, no animation for performance */}
       <div
         style={{
           position: 'absolute',
@@ -96,8 +97,6 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
           backgroundImage: `url(${activeCard.image})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          transform: 'scale(1.1)',
-          animation: 'kenBurns 8s ease-out forwards',
           zIndex: 0
         }}
       />
@@ -120,22 +119,15 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
         }}
       />
 
-      {/* Ken Burns Animation */}
-      <style>{`
-        @keyframes kenBurns {
-          0% { transform: scale(1.1) translate(0, 0); }
-          100% { transform: scale(1.15) translate(-2%, -1%); }
-        }
-      `}</style>
 
-      {/* Left Side - Content Area (65%) */}
+      {/* Left Side - Content Area (100%) */}
       <div
         style={{
           position: 'absolute',
           left: 0,
           top: 0,
           bottom: 0,
-          width: '65%',
+          width: '100%',
           zIndex: 10,
           display: 'flex',
           flexDirection: 'column',
@@ -174,7 +166,7 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
           style={{
             fontSize: '0.75rem',
             letterSpacing: '0.2em',
-            color: '#60a5fa',
+            color: '#ffffff',
             textTransform: 'uppercase',
             marginBottom: '0.75rem',
             fontWeight: 700
@@ -251,122 +243,115 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
         </div>
       </div>
 
-      {/* Right Side - Flush Smokey Glass Sidebar (35%) */}
-      <div
-        style={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          bottom: 0,
-          width: '35%',
-          background: 'rgba(15, 23, 42, 0.4)',
-          backdropFilter: 'blur(32px)',
-          WebkitBackdropFilter: 'blur(32px)',
-          borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
-          zIndex: 10,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-          padding: '2rem',
-          boxSizing: 'border-box'
-        }}
-      >
-        {/* Milestones Section Header */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <p
-            style={{
-              fontSize: '0.65rem',
-              fontWeight: 700,
-              color: 'rgba(148, 163, 184, 0.8)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.2em',
-              marginBottom: '1.25rem',
-              textAlign: 'center'
-            }}
-          >
-            Pathway Milestones
-          </p>
-          
-          {/* Milestone Items */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {[
-              { label: 'Foundation Training', status: 'completed' },
-              { label: 'CPL License', status: 'completed' },
-              { label: 'ATPL Theory', status: 'in-progress' },
-              { label: 'Type Rating', status: 'pending' }
-            ].map((milestone, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '0.75rem 1rem',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: '10px',
-                  border: `1px solid ${
-                    milestone.status === 'completed' ? 'rgba(34, 197, 94, 0.3)' :
-                    milestone.status === 'in-progress' ? 'rgba(96, 165, 250, 0.3)' :
-                    'rgba(148, 163, 184, 0.2)'
-                  }`
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: '0.8rem',
-                    color: milestone.status === 'completed' ? '#22c55e' :
-                           milestone.status === 'in-progress' ? '#60a5fa' : '#94a3b8',
-                    fontWeight: 500
-                  }}
-                >
-                  {milestone.label}
-                </span>
-                <span style={{ fontSize: '0.7rem' }}>
-                  {milestone.status === 'completed' ? '✓' :
-                   milestone.status === 'in-progress' ? '◐' : '○'}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Discover Pathway Button */}
+      {/* Directory Button - Bottom Right */}
+      <div style={{ position: 'absolute', bottom: '1.5rem', right: '1.5rem', zIndex: 30 }}>
         <button
-          onClick={activeCard.onClick}
+          onClick={() => activeCard.onClick?.()}
           style={{
-            width: '100%',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
             gap: '0.5rem',
-            padding: '1rem 1.5rem',
-            borderRadius: '12px',
-            border: '1px solid rgba(255,255,255,0.2)',
-            background: 'rgba(255,255,255,0.1)',
+            padding: '0.75rem 1.25rem',
+            borderRadius: '10px',
+            border: '1px solid rgba(255,255,255,0.3)',
+            background: 'rgba(255,255,255,0.15)',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             color: '#fff',
-            fontSize: '0.95rem',
+            fontSize: '0.9rem',
             fontWeight: 600,
             cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)',
-            marginTop: '1.5rem'
+            transition: 'all 0.3s ease'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
-            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
-            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
           }}
         >
           Discover Pathway
           <Icons.ArrowRight style={{ width: 18, height: 18 }} />
         </button>
+
+        {/* Directory Dropdown */}
+        {showDirectory && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 'calc(100% + 0.5rem)',
+              right: 0,
+              width: '280px',
+              background: 'rgba(15, 23, 42, 0.95)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255,255,255,0.1)',
+              padding: '1rem',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.4)'
+            }}
+          >
+            <p
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: '#94a3b8',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                margin: '0 0 0.75rem 0'
+              }}
+            >
+              All Pathways
+            </p>
+            {cards.map((card, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  goToSlide(idx);
+                  setShowDirectory(false);
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: idx === activeIndex ? 'rgba(96, 165, 250, 0.2)' : 'transparent',
+                  color: idx === activeIndex ? '#60a5fa' : '#e2e8f0',
+                  fontSize: '0.9rem',
+                  fontWeight: idx === activeIndex ? 600 : 400,
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (idx !== activeIndex) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (idx !== activeIndex) {
+                    e.currentTarget.style.background = 'transparent';
+                  }
+                }}
+              >
+                <span
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: idx === activeIndex ? '#60a5fa' : '#475569',
+                    flexShrink: 0
+                  }}
+                />
+                {card.title}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Navigation Arrows */}
@@ -374,7 +359,7 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
         onClick={prevSlide}
         style={{
           position: 'absolute',
-          right: 'calc(35% + 1rem)',
+          right: '1rem',
           top: '50%',
           transform: 'translateY(-50%)',
           width: '3rem',

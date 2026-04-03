@@ -484,7 +484,7 @@ export const JobMatchingSection: React.FC<JobMatchingSectionProps> = ({
   const { matches, interestJobs, loading, error, hasProfileData, totalJobs } = usePilotJobMatches({
     userId,
     limit: 10,
-    enableRealtime: true
+    enableRealtime: false // Disabled to prevent memory leak from constant re-renders
   });
 
   if (loading) {
