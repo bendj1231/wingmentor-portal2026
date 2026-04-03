@@ -1,28 +1,54 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { 
-  ArrowRight, 
-  Lock, 
-  Unlock, 
-  TrendingUp, 
-  Plane, 
-  Briefcase, 
-  GraduationCap, 
-  Search,
-  Filter,
-  ChevronRight,
-  Star,
-  Zap,
-  Target,
-  Globe,
-  Users,
-  Award,
-  Clock,
-  MapPin,
-  DollarSign,
-  Shield,
-  CheckCircle2,
-  X
-} from 'lucide-react';
+import { Icons } from '../icons';
+
+// Inline SVG Icon Components for icons not in Icons.tsx
+const IconComponents = {
+  Plane: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M2 12h20M2 12l5-5m-5 5l5 5M22 12l-5-5m5 5l-5 5M12 2v20" />
+    </svg>
+  ),
+  GraduationCap: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+      <path d="M6 12v5c3 3 9 3 12 0v-5" />
+    </svg>
+  ),
+  MapPin: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  ),
+  DollarSign: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <line x1="12" y1="1" x2="12" y2="23" />
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+    </svg>
+  ),
+  Star: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  ),
+  Filter: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+    </svg>
+  ),
+  X: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  ),
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  )
+};
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -261,7 +287,7 @@ const SECTOR_CATEGORIES: SectorCategory[] = [
     id: 'commercial',
     title: 'Commercial Airlines',
     description: 'Major, regional, and budget carriers serving scheduled passenger routes globally.',
-    icon: <Plane className="w-8 h-8" />,
+    icon: <IconComponents.Plane className="w-8 h-8" />,
     pathwayCount: 48,
     gradient: 'from-blue-600 via-blue-500 to-cyan-400',
     accentColor: '#3b82f6'
@@ -270,7 +296,7 @@ const SECTOR_CATEGORIES: SectorCategory[] = [
     id: 'private',
     title: 'Private & Corporate',
     description: 'Executive transport, fractional ownership, and luxury charter operations.',
-    icon: <Briefcase className="w-8 h-8" />,
+    icon: <Icons.Briefcase className="w-8 h-8" />,
     pathwayCount: 32,
     gradient: 'from-amber-500 via-orange-500 to-rose-400',
     accentColor: '#f59e0b'
@@ -279,7 +305,7 @@ const SECTOR_CATEGORIES: SectorCategory[] = [
     id: 'cargo',
     title: 'Cargo Operations',
     description: 'Freight and logistics operations including express delivery and long-haul cargo.',
-    icon: <Globe className="w-8 h-8" />,
+    icon: <Icons.Globe className="w-8 h-8" />,
     pathwayCount: 24,
     gradient: 'from-emerald-600 via-teal-500 to-cyan-400',
     accentColor: '#10b981'
@@ -288,7 +314,7 @@ const SECTOR_CATEGORIES: SectorCategory[] = [
     id: 'specialty',
     title: 'Specialty & Rotary',
     description: 'Helicopters, air ambulance, firefighting, and aerial photography operations.',
-    icon: <Zap className="w-8 h-8" />,
+    icon: <Icons.Zap className="w-8 h-8" />,
     pathwayCount: 18,
     gradient: 'from-violet-600 via-purple-500 to-fuchsia-400',
     accentColor: '#8b5cf6'
@@ -297,7 +323,7 @@ const SECTOR_CATEGORIES: SectorCategory[] = [
     id: 'cadet',
     title: 'Cadet & Instruction',
     description: 'Airline cadet programs and flight instructor positions to build hours.',
-    icon: <GraduationCap className="w-8 h-8" />,
+    icon: <IconComponents.GraduationCap className="w-8 h-8" />,
     pathwayCount: 27,
     gradient: 'from-rose-600 via-pink-500 to-rose-400',
     accentColor: '#f43f5e'
@@ -306,7 +332,7 @@ const SECTOR_CATEGORIES: SectorCategory[] = [
     id: 'evtols',
     title: 'eVTOL & Air Taxi',
     description: 'Emerging urban air mobility sector with electric vertical take-off and landing.',
-    icon: <Target className="w-8 h-8" />,
+    icon: <Icons.Target className="w-8 h-8" />,
     pathwayCount: 15,
     gradient: 'from-cyan-600 via-sky-500 to-blue-400',
     accentColor: '#06b6d4'
@@ -350,7 +376,7 @@ const MatchBadge: React.FC<{ percentage: number; size?: 'sm' | 'md' | 'lg' }> = 
         boxShadow: `0 0 20px ${percentage >= 90 ? 'rgba(52, 211, 153, 0.5)' : percentage >= 80 ? 'rgba(96, 165, 250, 0.5)' : 'rgba(251, 191, 36, 0.5)'}`
       }}
     >
-      <Star className="w-3 h-3 fill-current" />
+      <IconComponents.Star className="w-3 h-3 fill-current" />
       <span>{percentage}% Match</span>
     </div>
   );
@@ -458,7 +484,7 @@ const TrendingHero: React.FC = () => {
             </span>
             {current.isUrgent && (
               <span className="flex items-center gap-1 text-rose-400 text-sm font-semibold animate-pulse">
-                <Zap className="w-4 h-4" /> Urgent
+                <Icons.Zap className="w-4 h-4" /> Urgent
               </span>
             )}
           </div>
@@ -481,7 +507,7 @@ const TrendingHero: React.FC = () => {
             shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40
           ">
             {current.ctaText}
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Icons.ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
         </GlassCard>
       </div>
@@ -566,7 +592,7 @@ const ForYouFeed: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg">
-                <Target className="w-5 h-5 text-white" />
+                <Icons.Target className="w-5 h-5 text-white" />
               </div>
               <span className="text-blue-400 font-semibold text-sm uppercase tracking-wider">
                 Personalized For You
@@ -593,7 +619,7 @@ const ForYouFeed: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                   : 'bg-white/5 text-slate-600 cursor-not-allowed'}
               `}
             >
-              <ChevronRight className="w-5 h-5 rotate-180" />
+              <Icons.ChevronRight className="w-5 h-5 rotate-180" />
             </button>
             <button
               onClick={() => scroll('right')}
@@ -606,7 +632,7 @@ const ForYouFeed: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                   : 'bg-white/5 text-slate-600 cursor-not-allowed'}
               `}
             >
-              <ChevronRight className="w-5 h-5" />
+              <Icons.ChevronRight className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -644,13 +670,13 @@ const ForYouFeed: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
             {/* Quick Info */}
             <div className="flex flex-wrap gap-2 mb-4">
               <span className="flex items-center gap-1 text-xs text-slate-400 bg-white/5 px-2 py-1 rounded-full">
-                <MapPin className="w-3 h-3" /> {match.location}
+                <IconComponents.MapPin className="w-3 h-3" /> {match.location}
               </span>
               <span className="flex items-center gap-1 text-xs text-slate-400 bg-white/5 px-2 py-1 rounded-full">
-                <DollarSign className="w-3 h-3" /> {match.salary}
+                <IconComponents.DollarSign className="w-3 h-3" /> {match.salary}
               </span>
               <span className="flex items-center gap-1 text-xs text-slate-400 bg-white/5 px-2 py-1 rounded-full">
-                <Clock className="w-3 h-3" /> {match.postedAt}
+                <Icons.Clock className="w-3 h-3" /> {match.postedAt}
               </span>
             </div>
 
@@ -700,7 +726,7 @@ const ForYouFeed: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                 )}
               </div>
               <button className="flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm font-semibold transition-colors">
-                View Details <ChevronRight className="w-4 h-4" />
+                View Details <Icons.ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </GlassCard>
@@ -726,7 +752,7 @@ const WingMentorExclusives: React.FC<{ userProfile?: any }> = ({ userProfile }) 
         {/* Section Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-500/30 mb-4">
-            <Award className="w-4 h-4 text-amber-400" />
+            <Icons.Award className="w-4 h-4 text-amber-400" />
             <span className="text-amber-300 font-semibold text-sm uppercase tracking-wider">
               WingMentor Exclusives
             </span>
@@ -751,7 +777,7 @@ const WingMentorExclusives: React.FC<{ userProfile?: any }> = ({ userProfile }) 
               {exclusive.isLocked && (
                 <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm flex flex-col items-center justify-center z-20 rounded-3xl">
                   <div className="w-16 h-16 rounded-full bg-slate-800/80 flex items-center justify-center mb-4">
-                    <Lock className="w-8 h-8 text-slate-400" />
+                    <Icons.Lock className="w-8 h-8 text-slate-400" />
                   </div>
                   <p className="text-slate-300 font-semibold mb-2">Locked</p>
                   <p className="text-slate-500 text-sm text-center max-w-xs">
@@ -767,7 +793,7 @@ const WingMentorExclusives: React.FC<{ userProfile?: any }> = ({ userProfile }) 
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-400/20 flex items-center justify-center">
-                    <Star className="w-5 h-5 text-amber-400" />
+                    <IconComponents.Star className="w-5 h-5 text-amber-400" />
                   </div>
                   <span className="text-amber-300 font-semibold">{exclusive.partner}</span>
                 </div>
@@ -789,7 +815,7 @@ const WingMentorExclusives: React.FC<{ userProfile?: any }> = ({ userProfile }) 
                     key={i}
                     className="flex items-center gap-1 text-xs text-slate-300 bg-white/5 px-2 py-1 rounded-full"
                   >
-                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                    <IconComponents.CheckCircle2 className="w-3 h-3 text-emerald-400" />
                     {benefit}
                   </span>
                 ))}
@@ -906,7 +932,7 @@ const ExploreBySector: React.FC = () => {
                     group-hover:translate-x-1 group-hover:-translate-y-1
                     transition-all duration-300
                   `}>
-                    <ArrowRight 
+                    <Icons.ArrowRight 
                       className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" 
                     />
                   </div>
@@ -971,7 +997,7 @@ const StickySearchBar: React.FC = () => {
               
               {/* Search Input */}
               <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -986,7 +1012,7 @@ const StickySearchBar: React.FC = () => {
                 onClick={() => setShowFilterDrawer(true)}
                 className="flex items-center gap-2 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-slate-300 hover:bg-white/10 hover:text-white transition-all"
               >
-                <Filter className="w-5 h-5" />
+                <IconComponents.Filter className="w-5 h-5" />
                 <span className="hidden md:inline">Filters</span>
               </button>
             </div>
@@ -1027,7 +1053,7 @@ const StickySearchBar: React.FC = () => {
                 onClick={() => setShowFilterDrawer(false)}
                 className="p-2 hover:bg-white/10 rounded-full transition-colors"
               >
-                <X className="w-5 h-5 text-slate-400" />
+                <IconComponents.X className="w-5 h-5 text-slate-400" />
               </button>
             </div>
             
