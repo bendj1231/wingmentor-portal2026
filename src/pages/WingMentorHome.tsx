@@ -34,7 +34,7 @@ import FoundationalKnowledgeExamPage from './FoundationalKnowledgeExamPage';
 import LicenseSelectionPage from './LicenseSelectionPage';
 import InterviewEvaluationPage from './InterviewEvaluationPage';
 import ProgramSyllabusPage from './ProgramSyllabusPage';
-import WingMentorNetworkPage from './WingMentorNetworkPage';
+import { WingMentorNetworkPage } from './WingMentorNetworkPage';
 import PathwaysPage from './PathwaysPage';
 
 // Foundational Enrollment Check Component
@@ -227,6 +227,7 @@ export type MainView =
   | 'pilot-profile'
   | 'contact'
   | 'wingmentor-network'
+  | 'wingmentor-connect'
   | 'aviation-expectations'
   | 'atpl-pathway'
   | 'private-sector'

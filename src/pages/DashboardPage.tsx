@@ -1495,16 +1495,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                     Master core aviation fundamentals, instrument procedures, and CRM techniques through structured simulator training.
                   </p>
                   
-                  <div style={{ marginTop: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: isDarkMode ? '#94a3b8' : '#475569', marginBottom: '0.5rem' }}>
-                      <span>Progress</span>
-                      <span style={{ fontWeight: 600, color: '#0ea5e9' }}>{progress.foundational}%</span>
-                    </div>
-                    <div style={{ height: '8px', borderRadius: '999px', background: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(226, 232, 240, 0.6)', overflow: 'hidden' }}>
-                      <div style={{ width: `${progress.foundational}%`, height: '100%', background: 'linear-gradient(90deg, #0ea5e9, #0284c7)', borderRadius: '999px' }} />
-                    </div>
-                  </div>
-                  
                   <div
                     style={{
                       marginTop: 'auto',
@@ -1574,16 +1564,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                     AIRBUS-aligned Evidence-Based Training and Competency-Based Training & Assessment interview for initial pilot recognition and industry placement readiness.
                   </p>
                   
-                  <div style={{ marginTop: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: isDarkMode ? '#94a3b8' : '#475569', marginBottom: '0.5rem' }}>
-                      <span>Progress</span>
-                      <span style={{ fontWeight: 600, color: '#10b981' }}>Available</span>
-                    </div>
-                    <div style={{ height: '8px', borderRadius: '999px', background: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(226, 232, 240, 0.6)', overflow: 'hidden' }}>
-                      <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, #10b981, #059669)', borderRadius: '999px' }} />
-                    </div>
-                  </div>
-                  
                   <div
                     style={{
                       marginTop: 'auto',
@@ -1642,13 +1622,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.9rem', lineHeight: 1.5, flex: 1 }}>
                     Access your examination portal, view results, and track your assessment progress across all modules.
                   </p>
-                  
-                  <div style={{ marginTop: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#94a3b8' }}>
-                      <span>Latest Score</span>
-                      <span style={{ fontWeight: 600, color: '#10b981' }}>{competencyScores.exams}%</span>
-                    </div>
-                  </div>
                   
                   <button
                     style={{
