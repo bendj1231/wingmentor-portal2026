@@ -630,24 +630,24 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                 className={`horizontal-card ${mainView === 'wingmentor-connect' ? 'active' : ''}`} 
                 style={{ 
                   cursor: 'pointer', 
-                  padding: '0.75rem 1.5rem',
+                  padding: '0.5rem 1rem',
                   border: mainView === 'wingmentor-connect' ? '2px solid #0ea5e9' : 'none',
-                  minHeight: '100px'
+                  minHeight: '50px'
                 }} 
                 onClick={() => onViewWingMentorConnect?.()}
               >
                 <div className="horizontal-card-content-wrapper">
-                  <div style={{ maxWidth: '65%', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ fontSize: '1.25rem', color: '#000000', fontWeight: 'bold' }}>•</div>
-                    <div className="horizontal-card-content" style={{ padding: '1rem 0', textAlign: 'left', flex: 1, maxWidth: '100%' }}>
-                      <h3 className="horizontal-card-title" style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#0f172a', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>WingMentor Connect</h3>
-                      <p className="horizontal-card-desc" style={{ maxWidth: '100%', marginBottom: 0, color: '#64748b', fontSize: '0.875rem', lineHeight: 1.4 }}>
+                  <div style={{ maxWidth: '65%', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div style={{ fontSize: '1rem', color: '#000000', fontWeight: 'bold' }}>•</div>
+                    <div className="horizontal-card-content" style={{ padding: '0.5rem 0', textAlign: 'left', flex: 1, maxWidth: '100%' }}>
+                      <h3 className="horizontal-card-title" style={{ fontSize: '1rem', marginBottom: '0.125rem', color: '#0f172a', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>WingMentor Connect</h3>
+                      <p className="horizontal-card-desc" style={{ maxWidth: '100%', marginBottom: 0, color: '#64748b', fontSize: '0.75rem', lineHeight: 1.3 }}>
                         Engage with mentors, mentees, and the Pilot Gap Forum community
                       </p>
                     </div>
                   </div>
                   <div className="hub-card-arrow">
-                    <Icons.ArrowRight style={{ width: 20, height: 20 }} />
+                    <Icons.ArrowRight style={{ width: 16, height: 16 }} />
                   </div>
                 </div>
                 <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop" alt="WingMentor Connect" className="hub-card-bg-image" style={{ width: '35%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
