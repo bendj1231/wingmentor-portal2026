@@ -436,33 +436,53 @@ const LivePulsingDot: React.FC = () => (
 
 const OmniSearchBar: React.FC<{ value: string; onChange: (v: string) => void }> = ({ value, onChange }) => {
   return (
-    <div className="sticky top-0 z-50 w-full px-4 py-4 bg-[#0B0F19]/95 backdrop-blur-md border-b border-white/5">
-      <div className="max-w-7xl mx-auto">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Icons.Search className="h-5 w-5 text-slate-400" />
-          </div>
-          <input
-            type="text"
-            className="block w-full pl-11 pr-4 py-3.5 
-              bg-slate-900/50 border border-white/10 rounded-2xl
-              text-slate-100 placeholder-slate-500
-              focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30
-              transition-all duration-200
-              shadow-inner shadow-black/20"
-            placeholder="Search airlines, requirements, aircraft type..."
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-          />
-          {value && (
-            <button
-              onClick={() => onChange('')}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center"
-            >
-              <Icons.X className="h-5 w-5 text-slate-400 hover:text-slate-300" />
-            </button>
-          )}
-        </div>
+    <div style={{ 
+      width: '100%', 
+      maxWidth: '600px', 
+      margin: '0 auto 40px',
+      padding: '0 20px'
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: '#1e293b',
+        borderRadius: '12px',
+        border: '1px solid #334155',
+        padding: '4px'
+      }}>
+        <span style={{ 
+          padding: '12px 16px',
+          color: '#94a3b8',
+          fontSize: '20px'
+        }}>🔍</span>
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Search..."
+          style={{
+            flex: 1,
+            background: 'transparent',
+            border: 'none',
+            outline: 'none',
+            color: '#f8fafc',
+            fontSize: '16px',
+            padding: '12px 0'
+          }}
+        />
+        <button
+          style={{
+            padding: '10px 14px',
+            margin: '4px',
+            backgroundColor: '#334155',
+            border: 'none',
+            borderRadius: '8px',
+            color: '#94a3b8',
+            cursor: 'pointer'
+          }}
+        >
+          ⚡
+        </button>
       </div>
     </div>
   );
@@ -490,31 +510,18 @@ const LiveJobBoard: React.FC = () => {
         {/* Horizontal Scrolling Cards */}
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide"
+          className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {LIVE_JOBS.map((job) => (
             <div
               key={job.id}
-              className="flex-shrink-0 w-[300px] p-4 rounded-2xl
+              className="flex-shrink-0 w-[380px] p-5 rounded-3xl
                 bg-slate-900/80 border border-white/10
                 hover:bg-slate-800/80 hover:border-white/20
                 transition-all duration-300 cursor-pointer group"
             >
-              {/* Header with Logo */}
-              <header className="pt-20 pb-8 px-4 text-center">
-                <div className="mb-4">
-                  <img src="/logo.png" alt="WingMentor" className="h-12 mx-auto" />
-                </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-                  Discover Pathways
-                </h1>
-                <p className="mt-2 text-slate-400 text-sm md:text-base max-w-xl mx-auto">
-                  Explore structured career roadmaps designed to guide your journey from student pilot to professional aviation careers.
-                </p>
-              </header>
-
-              {/* Omni-Search Bar */}
+              {/* Job Card Header */}
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-lg font-bold text-slate-300">
@@ -616,16 +623,16 @@ const CategoryRow: React.FC<{ section: CategorySection; index: number }> = ({ se
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide"
+            className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {section.pathways.map((pathway, i) => (
               <div
                 key={pathway.id}
-                className="flex-shrink-0 w-[280px] group cursor-pointer"
+                className="flex-shrink-0 w-[340px] group cursor-pointer"
               >
                 {/* Thumbnail Image */}
-                <div className="relative h-36 rounded-xl overflow-hidden mb-3">
+                <div className="relative h-48 rounded-2xl overflow-hidden mb-4">
                   <img
                     src={pathway.image}
                     alt={pathway.title}
@@ -669,24 +676,24 @@ const CategoryRow: React.FC<{ section: CategorySection; index: number }> = ({ se
             ))}
 
             {/* Spacer for button positioning */}
-            <div className="flex-shrink-0 w-48" />
+            <div className="flex-shrink-0 w-64" />
           </div>
 
           {/* Blur Fade Overlay + Button */}
-          <div className="absolute right-0 top-0 bottom-0 w-48 
+          <div className="absolute right-0 top-0 bottom-0 w-64 
             bg-gradient-to-l from-[#0B0F19] via-[#0B0F19]/95 to-transparent
-            pointer-events-none flex items-center justify-end pr-2">
+            pointer-events-none flex items-center justify-end pr-4">
             <button 
-              className="pointer-events-auto px-4 py-2 rounded-full
+              className="pointer-events-auto px-5 py-3 rounded-full
                 bg-slate-800/90 border border-white/20 backdrop-blur-sm
-                text-slate-100 text-sm font-medium
+                text-slate-100 text-base font-medium
                 hover:bg-slate-700/90 hover:border-white/30
                 shadow-lg shadow-black/30
                 transition-all duration-300
                 flex items-center gap-2 group"
             >
               <span>Discover More</span>
-              <Icons.ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <Icons.ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
@@ -697,41 +704,41 @@ const CategoryRow: React.FC<{ section: CategorySection; index: number }> = ({ se
 
 const NewsFeedCard: React.FC<{ item: NewsItem }> = ({ item }) => {
   return (
-    <div className="py-6 px-4">
+    <div className="py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className={`
-          p-4 rounded-xl border
+          p-6 rounded-2xl border
           ${item.urgent 
             ? 'bg-rose-500/5 border-rose-500/20' 
             : 'bg-slate-800/30 border-white/5'
           }
         `}>
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-4">
             <div className={`
-              p-2 rounded-lg flex-shrink-0
+              p-3 rounded-xl flex-shrink-0
               ${item.urgent ? 'bg-rose-500/10 text-rose-400' : 'bg-blue-500/10 text-blue-400'}
             `}>
               {item.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-2">
                 <span className={`
-                  text-xs font-semibold uppercase tracking-wider
+                  text-sm font-semibold uppercase tracking-wider
                   ${item.urgent ? 'text-rose-400' : 'text-blue-400'}
                 `}>
                   {item.category}
                 </span>
                 {item.urgent && (
-                  <span className="px-1.5 py-0.5 bg-rose-500/10 text-rose-400 text-xs rounded border border-rose-500/20">
+                  <span className="px-2 py-1 bg-rose-500/10 text-rose-400 text-sm rounded border border-rose-500/20">
                     Urgent
                   </span>
                 )}
               </div>
-              <h3 className="text-sm font-semibold text-slate-100 mb-1">{item.title}</h3>
-              <p className="text-xs text-slate-400">{item.subtitle}</p>
+              <h3 className="text-lg font-semibold text-slate-100 mb-2">{item.title}</h3>
+              <p className="text-sm text-slate-400">{item.subtitle}</p>
             </div>
-            <button className="flex-shrink-0 p-2 text-slate-500 hover:text-slate-300 transition-colors">
-              <Icons.ChevronRight className="w-5 h-5" />
+            <button className="flex-shrink-0 p-3 text-slate-500 hover:text-slate-300 transition-colors">
+              <Icons.ChevronRight className="w-6 h-6" />
             </button>
           </div>
         </div>
@@ -756,50 +763,154 @@ export const PathwaysPage: React.FC<PathwaysPageProps> = ({
   isDarkMode = true 
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [renderError, setRenderError] = useState<string | null>(null);
 
-  // Simple debug render first
-  return (
-    <div style={{ 
-      minHeight: '100vh', 
-      backgroundColor: '#0B0F19', 
-      color: '#f8fafc',
-      padding: '20px'
-    }}>
-      {/* Debug indicator */}
+  try {
+    return (
       <div style={{ 
-        backgroundColor: '#ef4444', 
-        color: 'white', 
-        padding: '10px', 
-        marginBottom: '20px',
-        borderRadius: '4px',
-        fontWeight: 'bold'
+        minHeight: '100vh', 
+        backgroundColor: '#0B0F19', 
+        color: '#f8fafc'
       }}>
-        DEBUG: PathwaysPage is rendering!
-      </div>
+        {/* Global Styles for Scrollbar Hiding */}
+        <style>{`
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
 
-      <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Pathways Page</h1>
-      
-      <button 
-        onClick={onBack}
-        style={{
-          padding: '10px 20px',
-          backgroundColor: '#3b82f6',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          marginBottom: '20px'
-        }}
-      >
-        Back to Dashboard
-      </button>
+        {/* Header with Logo */}
+        <header style={{ 
+          textAlign: 'center', 
+          padding: '60px 20px 30px'
+        }}>
+          <div style={{ marginBottom: '24px' }}>
+            <img src="/logo.png" alt="WingMentor" style={{ maxWidth: '280px', height: 'auto' }} />
+          </div>
+          
+          {/* Subtitle like dashboard */}
+          <div style={{ 
+            letterSpacing: '0.3em', 
+            color: '#60a5fa', 
+            fontWeight: 700,
+            fontSize: '14px',
+            textTransform: 'uppercase',
+            marginBottom: '16px'
+          }}>
+            WINGMENTOR PATHWAYS
+          </div>
+          
+          {/* Main Title - matching dashboard Georgia font */}
+          <h1 style={{ 
+            fontSize: '48px', 
+            fontWeight: 400,
+            color: '#f8fafc',
+            fontFamily: '"Georgia", serif',
+            marginBottom: '20px',
+            letterSpacing: '-0.02em'
+          }}>
+            Discover Pathways
+          </h1>
+          
+          {/* Enhanced Description */}
+          <p style={{ 
+            color: '#94a3b8', 
+            fontSize: '18px', 
+            maxWidth: '700px', 
+            margin: '0 auto',
+            lineHeight: '1.7'
+          }}>
+            Your comprehensive aviation career directory. Browse live job opportunities from leading airlines, 
+            explore commercial and private sector pathways, and stay informed with real-time industry updates 
+            tailored to your pilot profile and career aspirations.
+          </p>
+        </header>
 
-      <div style={{ color: '#94a3b8' }}>
-        <p>This is a simplified version for debugging.</p>
-        <p>User Profile: {userProfile ? 'Loaded' : 'Not loaded'}</p>
+        {/* Return to Platform Button */}
+        <button 
+          onClick={onBack}
+          style={{
+            position: 'fixed',
+            top: '20px',
+            left: '20px',
+            padding: '10px 20px',
+            backgroundColor: 'rgba(30, 41, 59, 0.8)',
+            color: '#cbd5e1',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '999px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '500',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            zIndex: 50
+          }}
+        >
+          <Icons.ChevronLeft style={{ width: '16px', height: '16px' }} />
+          Return to Platform
+        </button>
+
+        {/* Omni-Search Bar */}
+        <OmniSearchBar value={searchQuery} onChange={setSearchQuery} />
+
+        {/* Main Content */}
+        <main>
+          {/* Live Job Board */}
+          <LiveJobBoard />
+
+          {/* Category Rows with News Injections */}
+          {CATEGORY_SECTIONS.map((section, index) => (
+            <React.Fragment key={section.id}>
+              <CategoryRow section={section} index={index} />
+              
+              {/* Inject News Card after each section */}
+              {NEWS_ITEMS[index] && (
+                <NewsFeedCard item={NEWS_ITEMS[index]} />
+              )}
+            </React.Fragment>
+          ))}
+
+          {/* Final News Item if more news than categories */}
+          {NEWS_ITEMS.length > CATEGORY_SECTIONS.length && (
+            <NewsFeedCard item={NEWS_ITEMS[NEWS_ITEMS.length - 1]} />
+          )}
+        </main>
       </div>
-    </div>
-  );
+    );
+  } catch (err: any) {
+    console.error('PathwaysPage error:', err);
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        backgroundColor: '#0B0F19', 
+        color: '#f8fafc',
+        padding: '40px',
+        textAlign: 'center'
+      }}>
+        <h1 style={{ color: '#ef4444', marginBottom: '20px' }}>Error Loading Pathways</h1>
+        <p style={{ color: '#94a3b8', marginBottom: '20px' }}>{err?.message || 'Unknown error'}</p>
+        <button 
+          onClick={() => window.location.reload()}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer'
+          }}
+        >
+          Reload Page
+        </button>
+      </div>
+    );
+  }
 };
 
 export default PathwaysPage;
