@@ -619,7 +619,7 @@ const ForYouFeed: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                   : 'bg-white/5 text-slate-600 cursor-not-allowed'}
               `}
             >
-              <Icons.ChevronRight className="w-5 h-5 rotate-180" />
+              <Icons.ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={() => scroll('right')}
