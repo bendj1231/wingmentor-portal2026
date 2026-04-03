@@ -13,6 +13,8 @@ import { ProgramProgressPage } from './pages/ProgramProgressPage';
 import FoundationalProgramLogbookPage from './pages/FoundationalProgramLogbookPage';
 import { ExaminationPortalPage } from './pages/ExaminationPortalPage';
 import EnrolledFoundationalPage from './pages/EnrolledFoundationalPage';
+import { WingMentorConnectPage } from './pages/WingMentorConnectPage';
+import { PilotGapForumPage } from './pages/PilotGapForumPage';
 import { LoginPage } from './pages/LoginPage';
 import { GraphicsPresetSelector, type DetectionResult, type GraphicsPreset } from './components/GraphicsPresetSelector';
 
@@ -552,13 +554,16 @@ function App() {
     | 'foundational-enrolled'
     | 'program-progress'
     | 'examination-portal'
-    | 'modules';
+    | 'modules'
+    | 'wingmentor-connect'
+    | 'pilot-gap-forum'
+    | 'wingmentor-chat';
 
   const VIEW_WHITELIST: ViewName[] = [
     'login','hub','dashboard','programs','pathways','applications','foundational','atpl','airtaxi','privatesector',
     'foundational-onboarding','post-enrollment-slideshow','ai-screening','remote-segment','terms-conditions','mentorship',
     'reset-password','module-01','module-02','module-03','pilot-profile','recognition','verification','job-database',
-    'foundational-enrolled', 'program-progress', 'examination-portal', 'modules'
+    'foundational-enrolled', 'program-progress', 'examination-portal', 'modules', 'wingmentor-connect', 'pilot-gap-forum', 'wingmentor-chat'
   ];
 
   const [currentView, setCurrentView] = useState<ViewName>('login');
@@ -1233,6 +1238,28 @@ function App() {
         </div>
       ) : currentView === 'job-database' ? (
         <PilotJobDatabasePage onBack={() => setCurrentView('applications')} onLogout={handleLogout} userProfile={authState.userProfile} />
+      ) : currentView === 'wingmentor-connect' ? (
+        <WingMentorConnectPage 
+          onBack={() => setCurrentView('applications')}
+          onViewPilotGapForum={() => setCurrentView('pilot-gap-forum')}
+          onViewWingMentorChat={() => setCurrentView('wingmentor-chat')}
+        />
+      ) : currentView === 'pilot-gap-forum' ? (
+        <PilotGapForumPage 
+          onBack={() => setCurrentView('wingmentor-connect')}
+          userProfile={authState.userProfile}
+        />
+      ) : currentView === 'wingmentor-chat' ? (
+        <WingMentorHome
+          onLogout={handleLogout}
+          userProfile={authState.userProfile}
+          onStartFoundationalEnrollment={() => setCurrentView('foundational-onboarding')}
+          onViewChange={(view) => handleViewChange(view as ViewName)}
+          initialView='wingmentor-network'
+          preloadedData={authState.preloadedData}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={handleToggleDarkMode}
+        />
       ) : (
         <></>
       )}

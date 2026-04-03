@@ -34,6 +34,8 @@ import FoundationalKnowledgeExamPage from './FoundationalKnowledgeExamPage';
 import LicenseSelectionPage from './LicenseSelectionPage';
 import InterviewEvaluationPage from './InterviewEvaluationPage';
 import ProgramSyllabusPage from './ProgramSyllabusPage';
+import WingMentorNetworkPage from './WingMentorNetworkPage';
+import PathwaysPage from './PathwaysPage';
 
 // Foundational Enrollment Check Component
 const FoundationalEnrollmentCheck: React.FC<{ 
@@ -1558,10 +1560,10 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                   }}
                   onClick={() => handleNewsClick(item)}
                   onMouseOver={(e) => {
-                    e.currentTarget.style.background = '#f8fafc';
+                    e.currentTarget.style.background = isDarkMode ? 'rgba(30, 41, 59, 0.6)' : '#f8fafc';
                   }}
                   onMouseOut={(e) => {
-                    e.currentTarget.style.background = 'white';
+                    e.currentTarget.style.background = isDarkMode ? 'transparent' : 'white';
                   }}
                   >
                     <div style={{
@@ -4434,9 +4436,11 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
         return <ProgramsView />;
       case 'pathways':
         return (
-          <div style={{ transform: 'scale(1.15)', transformOrigin: 'top center' }}>
-            <PathwaysView />
-          </div>
+          <PathwaysPage 
+            userProfile={userProfile}
+            onBack={() => setMainView('dashboard')}
+            isDarkMode={isDarkMode}
+          />
         );
       case 'pilot-gap-module':
         return (
@@ -4487,6 +4491,8 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
             onViewJobDatabase={() => onViewChange?.('job-database')}
             onViewModule01={() => onViewChange?.('module-01', 'applications')}
             onViewModule02={() => onViewChange?.('module-02', 'applications')}
+            onViewModule03={() => onViewChange?.('module-03', 'applications')}
+            onViewWingMentorConnect={() => onViewChange?.('wingmentor-connect')}
             onViewExaminationPortal={() => onViewChange?.('examination-portal')}
             onViewFoundationalPlatform={() => onViewChange?.('foundational-enrolled')}
             isDarkMode={isDarkMode}
@@ -4520,6 +4526,8 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
             onViewLicensureExperience={() => setMainView('pilot-licensure-experience')}
             onViewModule01={() => onViewChange?.('module-01', 'pilot-portfolio')}
             onViewModule02={() => onViewChange?.('module-02', 'pilot-portfolio')}
+            onViewModule03={() => onViewChange?.('module-03', 'pilot-portfolio')}
+            onViewWingMentorConnect={() => onViewChange?.('wingmentor-connect')}
             onViewExaminationPortal={() => onViewChange?.('examination-portal')}
             onViewFoundationalPlatform={() => onViewChange?.('foundational-enrolled')}
           />
@@ -4537,7 +4545,7 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
       case 'full-atlas-resume':
         return <FullAtlasResumePage onBack={() => setMainView('dashboard')} onPrint={() => window.print()} userProfile={userProfile} />;
       case 'wingmentor-network':
-        return <WingMentorNetworkView onBack={() => setMainView('dashboard')} onViewChange={onViewChange} />;
+        return <WingMentorNetworkPage onBack={() => setMainView('applications')} />;
       case 'aviation-expectations':
         return (
           <AviationIndustryExpectationsPage

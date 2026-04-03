@@ -1,31 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Icons } from '../icons';
 
-interface StrategyAdvantage {
-  text: string;
-  highlight?: string;
-}
-
-interface PathwayStrategyCard {
+interface ExpectationCard {
   id: string;
   title: string;
   subtitle: string;
   description: string;
   image: string;
-  advantages: StrategyAdvantage[];
-  cta: string;
-  onClick?: () => void;
+  expectations: string[];
 }
 
-interface PathwayStrategyCarouselProps {
-  cards: PathwayStrategyCard[];
+interface IndustryExpectationsCarouselProps {
+  cards: ExpectationCard[];
   autoPlay?: boolean;
   autoPlayInterval?: number;
 }
 
-export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = ({
+export const IndustryExpectationsCarousel: React.FC<IndustryExpectationsCarouselProps> = ({
   cards,
-  autoPlay = true
+  autoPlay = true,
+  autoPlayInterval = 10000
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -38,11 +32,11 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
     setVisibleBullets([]);
     setActiveIndex(index);
     
-    const bulletsCount = cards[index]?.advantages?.length || 0;
+    const bulletsCount = cards[index]?.expectations?.length || 0;
     for (let i = 0; i < bulletsCount; i++) {
       setTimeout(() => {
         setVisibleBullets(prev => [...prev, i]);
-      }, 50 + i * 80); // Faster animation
+      }, 50 + i * 80);
     }
     
     setTimeout(() => setIsTransitioning(false), 400);
@@ -58,15 +52,15 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
     goToSlide(prev);
   }, [activeIndex, cards.length, goToSlide]);
 
-  // Auto-play - reduced frequency for performance
+  // Auto-play
   useEffect(() => {
     if (!autoPlay || isPaused) return;
-    const timer = setInterval(nextSlide, 10000); // Increased to 10 seconds
+    const timer = setInterval(nextSlide, autoPlayInterval);
     return () => clearInterval(timer);
-  }, [autoPlay, isPaused, nextSlide]);
+  }, [autoPlay, isPaused, nextSlide, autoPlayInterval]);
 
   useEffect(() => {
-    const bulletsCount = cards[activeIndex]?.advantages?.length || 0;
+    const bulletsCount = cards[activeIndex]?.expectations?.length || 0;
     setVisibleBullets([]);
     for (let i = 0; i < bulletsCount; i++) {
       setTimeout(() => {
@@ -82,7 +76,7 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
       style={{
         position: 'relative',
         width: '100%',
-        height: '420px',
+        height: '520px',
         borderRadius: '24px',
         overflow: 'hidden',
         boxShadow: '0 20px 60px rgba(15, 23, 42, 0.15)',
@@ -99,24 +93,24 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
           width: '100%'
         }}
       >
-          {/* Left Side - Content (65%) */}
+        {/* Left Side - Content (60%) */}
         <div
           style={{
-            width: '65%',
-            minWidth: '65%',
-            maxWidth: '65%',
-            padding: '1.5rem 1.75rem',
+            width: '60%',
+            minWidth: '60%',
+            maxWidth: '60%',
+            padding: '2.5rem 2.5rem 2rem 2.5rem',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start',
             background: '#ffffff',
             zIndex: 10,
             overflow: 'hidden',
-            gap: '0.25rem'
+            gap: '0.75rem'
           }}
         >
           {/* Slide Indicators */}
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
             {cards.map((_, index) => (
               <button
                 key={index}
@@ -139,18 +133,18 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              padding: '0.35rem 0.75rem',
+              padding: '0.5rem 1rem',
               borderRadius: '999px',
               background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-              fontSize: '0.6rem',
+              fontSize: '0.7rem',
               fontWeight: 600,
               color: '#ffffff',
               textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              marginBottom: '0.35rem',
+              letterSpacing: '0.08em',
+              marginBottom: '0.75rem',
               width: 'fit-content',
               maxWidth: '100%',
-              lineHeight: 1.2,
+              lineHeight: 1.3,
               wordWrap: 'break-word',
               overflowWrap: 'break-word',
               boxShadow: '0 2px 8px rgba(59, 130, 246, 0.25)'
@@ -162,12 +156,12 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
           {/* Main Title */}
           <h3
             style={{
-              fontSize: '1.35rem',
+              fontSize: '2rem',
               fontWeight: 700,
               color: '#0f172a',
-              margin: '0 0 0.5rem',
-              lineHeight: 1.15,
-              letterSpacing: '-0.01em'
+              margin: '0 0 1rem',
+              lineHeight: 1.2,
+              letterSpacing: '-0.02em'
             }}
           >
             {activeCard.title}
@@ -176,10 +170,10 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
           {/* Description */}
           <p
             style={{
-              fontSize: '0.8rem',
+              fontSize: '1rem',
               color: '#64748b',
-              margin: '0 0 1rem',
-              lineHeight: 1.4,
+              margin: '0 0 1.5rem',
+              lineHeight: 1.6,
               maxWidth: '100%',
               wordWrap: 'break-word',
               overflowWrap: 'break-word'
@@ -188,16 +182,16 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
             {activeCard.description}
           </p>
 
-          {/* Strategic Advantages as Pills */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-            {(activeCard.advantages || []).slice(0, 5).map((advantage, index) => (
+          {/* Strategic Expectations as Pills */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+            {(activeCard.expectations || []).map((expectation, index) => (
               <div
                 key={index}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.35rem',
-                  padding: '0.35rem 0.75rem',
+                  gap: '0.5rem',
+                  padding: '0.6rem 1rem',
                   borderRadius: '999px',
                   background: '#f8fafc',
                   border: '1px solid #e2e8f0',
@@ -208,8 +202,8 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
               >
                 <span
                   style={{
-                    width: '5px',
-                    height: '5px',
+                    width: '6px',
+                    height: '6px',
                     borderRadius: '50%',
                     background: '#3b82f6',
                     flexShrink: 0
@@ -217,7 +211,7 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
                 />
                 <span
                   style={{
-                    fontSize: '0.75rem',
+                    fontSize: '0.9rem',
                     fontWeight: 500,
                     color: '#475569',
                     wordWrap: 'break-word',
@@ -225,22 +219,22 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
                     maxWidth: '100%'
                   }}
                 >
-                  {advantage.text}
+                  {expectation}
                 </span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right Side - Image (35%) */}
+        {/* Right Side - Image (40%) */}
         <div
           style={{
-            width: '35%',
+            width: '40%',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          {/* Background Image - Static for performance */}
+          {/* Background Image */}
           <div
             style={{
               position: 'absolute',
@@ -294,7 +288,6 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
           >
             <Icons.ChevronRight style={{ width: 20, height: 20 }} />
           </button>
-
         </div>
       </div>
 

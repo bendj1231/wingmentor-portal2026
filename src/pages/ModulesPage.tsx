@@ -44,7 +44,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({
   onLaunchPilotGapModule2,
   onLaunchModule3
 }) => {
-  const displayName = userProfile?.firstName || userProfile?.displayName || userProfile?.email || 'Pilot';
+  const displayName = [userProfile?.firstName, userProfile?.lastName].filter(Boolean).join(' ').trim() || userProfile?.displayName || userProfile?.email || 'Pilot';
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif', paddingTop: '120px' }}>
