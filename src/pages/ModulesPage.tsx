@@ -111,17 +111,25 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({
                   borderRadius: '16px',
                   padding: '1.5rem',
                   border: '1px solid #e2e8f0',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minHeight: '320px'
                 }}
               >
-                <h3 style={{ margin: '0 0 0.5rem', fontSize: '1rem', color: '#0f172a', fontWeight: 600 }}>
-                  {module.title}
-                </h3>
-                <p style={{ margin: 0, color: '#64748b', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1rem' }}>
-                  {module.description}
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '0.8rem', color: '#64748b' }}>{module.duration}</span>
+                {/* Content area that grows to push button down */}
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ margin: '0 0 0.5rem', fontSize: '1rem', color: '#0f172a', fontWeight: 600 }}>
+                    {module.title}
+                  </h3>
+                  <p style={{ margin: 0, color: '#64748b', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1rem' }}>
+                    {module.description}
+                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.8rem', color: '#64748b' }}>{module.duration}</span>
+                  </div>
                 </div>
+                
+                {/* Button pushed to bottom with marginTop: 'auto' */}
                 <button
                   onClick={module.id === 'pilot-gap-01' ? onLaunchPilotGapModule : module.id === 'pilot-gap-02' ? onLaunchPilotGapModule2 : onLaunchModule3}
                   style={{
@@ -134,6 +142,7 @@ export const ModulesPage: React.FC<ModulesPageProps> = ({
                     fontWeight: 600,
                     cursor: 'pointer',
                     fontSize: '0.85rem',
+                    marginTop: '1rem'
                   }}
                 >
                   Launch Module

@@ -624,7 +624,7 @@ function App() {
       return;
     }
     // Store return view for module navigation
-    if (returnView && ['module-01', 'module-02', 'module-03'].includes(view)) {
+    if (returnView && ['modules', 'module-01', 'module-02', 'module-03'].includes(view)) {
       setModuleReturnView(returnView);
     }
     setCurrentView(view);
