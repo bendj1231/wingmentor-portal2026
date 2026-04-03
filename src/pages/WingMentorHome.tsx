@@ -214,6 +214,7 @@ export type MainView =
   | 'news'
   | 'programs' 
   | 'pathways'
+  | 'pathways-loading'
   | 'applications'
   | 'recognition'
   | 'pilot-portfolio'
@@ -309,6 +310,16 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialView]);
+
+  // Auto-transition from pathways-loading to pathways after delay
+  useEffect(() => {
+    if (mainView === 'pathways-loading') {
+      const timer = setTimeout(() => {
+        setMainView('pathways');
+      }, 1500); // 1.5 second loading screen
+      return () => clearTimeout(timer);
+    }
+  }, [mainView]);
 
   const [sidebarScale, setSidebarScale] = useState(1);
 
@@ -516,14 +527,14 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
               </div>
 
               <div 
-                className={`horizontal-card ${mainView === 'pathways' ? 'active' : ''}`} 
+                className={`horizontal-card ${mainView === 'pathways' || mainView === 'pathways-loading' ? 'active' : ''}`} 
                 style={{ 
                   cursor: 'pointer', 
                   padding: '0.75rem 1.5rem',
-                  border: mainView === 'pathways' ? '2px solid #0ea5e9' : 'none',
+                  border: (mainView === 'pathways' || mainView === 'pathways-loading') ? '2px solid #0ea5e9' : 'none',
                   minHeight: '80px'
                 }} 
-                onClick={() => setMainView('pathways')}
+                onClick={() => setMainView('pathways-loading')}
               >
                 <div className="horizontal-card-content-wrapper">
                   <div style={{ maxWidth: '65%', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -4008,7 +4019,7 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
   // Main content panel
   const MainPanel = () => {
     const marginLeft = showSidebar ? SIDEBAR_BASE_WIDTH * sidebarScale : 0;
-    const mainPanelScale = (mainView === 'programs' || mainView === 'pathways') ? 1 : 1.25;
+    const mainPanelScale = (mainView === 'programs') ? 1 : 1.25;
     const inverseScalePercent = `${(100 / mainPanelScale).toFixed(4)}%`;
     return (
       <div style={{
@@ -4468,6 +4479,40 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
             isDarkMode={isDarkMode}
           />
         );
+      case 'pathways-loading':
+        return (
+          <div
+            style={{
+              minHeight: '100vh',
+              background: '#0B0F19',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              gap: '2rem'
+            }}
+          >
+            <img src="/logo.png" alt="WingMentor" style={{ width: '280px', height: 'auto' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                border: '3px solid rgba(59, 130, 246, 0.2)',
+                borderTopColor: '#3b82f6',
+                animation: 'spin 1s linear infinite'
+              }} />
+              <p style={{ color: '#94a3b8', fontSize: '1rem', margin: 0 }}>
+                Loading Pathways...
+              </p>
+            </div>
+            <style>{`
+              @keyframes spin {
+                to { transform: rotate(360deg); }
+              }
+            `}</style>
+          </div>
+        );
       case 'pilot-gap-module':
         return (
           <PilotGapModulePage 
@@ -4846,7 +4891,7 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
   };
 
   // Determine if we should show the sidebar (hide for standalone views like enrollment and program platform)
-  const showSidebar = mainView !== 'foundational' && mainView !== 'foundational-get-started' && mainView !== 'foundational-onboarding' && mainView !== 'foundational-enrolled' && mainView !== 'foundational-loading';
+  const showSidebar = mainView !== 'foundational' && mainView !== 'foundational-get-started' && mainView !== 'foundational-onboarding' && mainView !== 'foundational-enrolled' && mainView !== 'foundational-loading' && mainView !== 'pathways' && mainView !== 'pathways-loading';
 
   return (
     <div style={{ 

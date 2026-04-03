@@ -743,9 +743,31 @@ export const PathwaysPage: React.FC<PathwaysPageProps> = ({
   isDarkMode = true 
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [hasError, setHasError] = useState(false);
+
+  // Debug: log when component mounts
+  useEffect(() => {
+    console.log('PathwaysPage mounted', { userProfile, isDarkMode });
+  }, []);
+
+  if (hasError) {
+    return (
+      <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold mb-4">Something went wrong</h2>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-slate-100">
+    <div className="min-h-screen bg-[#0B0F19] text-slate-100" onError={() => setHasError(true)}>
       {/* Global Styles for Scrollbar Hiding */}
       <style>{`
         .scrollbar-hide::-webkit-scrollbar {
@@ -756,6 +778,11 @@ export const PathwaysPage: React.FC<PathwaysPageProps> = ({
           scrollbar-width: none;
         }
       `}</style>
+
+      {/* Debug indicator */}
+      <div className="fixed top-0 left-0 z-[9999] bg-red-500 text-white px-2 py-1 text-xs">
+        PathwaysPage Loaded
+      </div>
 
       {/* Omni-Search Bar */}
       <OmniSearchBar value={searchQuery} onChange={setSearchQuery} />
