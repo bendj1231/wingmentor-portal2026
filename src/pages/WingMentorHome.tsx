@@ -2404,10 +2404,10 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2563eb' }} />
+                          <div style={{ width: '32px', height: '4px', borderRadius: '2px', background: 'rgba(15, 23, 42, 0.2)' }}></div>
                           <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: isDarkMode ? '#f8fafc' : '#0f172a' }}>{update.title}</h4>
                         </div>
-                        <p style={{ margin: 0, color: isDarkMode ? '#cbd5e1' : '#64748b', fontSize: '0.9rem', lineHeight: 1.5 }}>{update.summary}</p>
+                        <p style={{ margin: 0, color: isDarkMode ? '#cbd5e1' : '#475569', fontSize: '0.9rem', lineHeight: 1.5 }}>{update.summary}</p>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.75rem', fontSize: '0.8rem', color: isDarkMode ? '#94a3b8' : '#94a3b8' }}>
                           <span>{update.source}</span>
                           <span>{update.date}</span>
@@ -2463,13 +2463,13 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
             {/* Foundation Program Progress Card - Hard Truth Format */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginTop: '2rem', textAlign: 'left' }}>
                 <div style={{
-                  backgroundColor: 'rgba(15, 23, 42, 0.7)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(16px)',
                   WebkitBackdropFilter: 'blur(16px)',
                   borderRadius: '24px',
                   padding: '4rem 3rem',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  boxShadow: '0 8px 32px rgba(15, 23, 42, 0.08)',
+                  border: '1px solid rgba(226, 232, 240, 0.6)',
                   textAlign: 'center',
                   width: '100%',
                   boxSizing: 'border-box'
@@ -2478,7 +2478,7 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                   <div style={{ color: '#60a5fa', fontSize: '0.875rem', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
                     PROGRESS TRACKING
                   </div>
-                  <h2 style={{ fontSize: '1.8rem', fontWeight: 400, color: '#f8fafc', marginBottom: '2.5rem', fontFamily: 'Georgia, serif' }}>
+                  <h2 style={{ fontSize: '1.8rem', fontWeight: 400, color: '#0f172a', marginBottom: '2.5rem', fontFamily: 'Georgia, serif' }}>
                     Foundation Program Journey
                   </h2>
                   
@@ -2494,11 +2494,11 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                       opacity: 1,
                       animation: 'slideInOut 8s infinite'
                     }}>
-                      <div style={{ color: '#cbd5e1', fontSize: '1.05rem', lineHeight: 1.8, margin: 0, textAlign: 'left' }}>
+                      <div style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.8, margin: 0, textAlign: 'left' }}>
                         <strong>Your Foundation Program progress is tracked in real-time.</strong> WingMentor monitors your training advancement and syncs with our comprehensive database.
                         <br /><br />
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#f8fafc' }}>
+                          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0f172a' }}>
                             Module Progress
                           </span>
                           <span style={{ fontSize: '0.875rem', color: '#60a5fa', fontWeight: 600 }}>
@@ -2508,7 +2508,7 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                       <div style={{
                         width: '100%',
                         height: '8px',
-                        background: 'rgba(255,255,255,0.1)',
+                        background: 'rgba(15, 23, 42, 0.1)',
                         borderRadius: '4px',
                         overflow: 'hidden',
                         marginBottom: '0.5rem'
@@ -2521,7 +2521,7 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                           transition: 'width 0.3s ease'
                         }}></div>
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#94a3b8' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b' }}>
                         <span>{progressPercent}% Complete</span>
                         <span>Last sync: {loadingProgress ? 'Loading...' : new Date().toLocaleTimeString()}</span>
                       </div>
@@ -2538,11 +2538,11 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                     opacity: 0,
                     animation: 'slideInOut 8s infinite 4s'
                   }}>
-                    <div style={{ color: '#cbd5e1', fontSize: '1.05rem', lineHeight: 1.8, margin: 0, textAlign: 'left' }}>
+                    <div style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.8, margin: 0, textAlign: 'left' }}>
                       <strong>Advanced CRM techniques module now available.</strong> The latest module in your Foundation Program includes enhanced simulator scenarios and real-world case studies.
                       <br /><br />
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                        <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#f8fafc' }}>
+                        <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0f172a' }}>
                           Recent Achievement
                         </span>
                         <span style={{ fontSize: '0.875rem', color: '#34d399', fontWeight: 600 }}>
@@ -2555,7 +2555,7 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                         borderRadius: '8px',
                         border: '1px solid rgba(16, 185, 129, 0.3)'
                       }}>
-                        <div style={{ fontSize: '0.8rem', color: '#6ee7b7', lineHeight: 1.5 }}>
+                        <div style={{ fontSize: '0.8rem', color: '#059669', lineHeight: 1.5 }}>
                           ✅ Module 8: Advanced CRM Techniques<br/>
                           ✅ Module 9: Decision Making Under Pressure<br/>
                           ✅ Module 10: Team Communication
@@ -2577,14 +2577,14 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                     width: '32px',
                     height: '4px',
                     borderRadius: '2px',
-                    background: 'rgba(255, 255, 255, 0.8)',
+                    background: 'rgba(15, 23, 42, 0.8)',
                     animation: 'progressPulse 8s infinite'
                   }}></div>
                   <div style={{
                     width: '32px',
                     height: '4px',
                     borderRadius: '2px',
-                    background: 'rgba(255, 255, 255, 0.2)'
+                    background: 'rgba(15, 23, 42, 0.2)'
                   }}></div>
                 </div>
               </div>
@@ -2651,7 +2651,7 @@ export const WingMentorHome: React.FC<WingMentorHomeProps> = ({
                 Need help with your training program? Our support team is here to assist you.
               </p>
               <p style={{ margin: 0 }}>
-                © 2024 WingMentor Network. All rights reserved.
+                &copy; 2024 WingMentor Network. All rights reserved.
               </p>
             </div>
           </div>
