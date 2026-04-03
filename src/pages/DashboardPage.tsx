@@ -876,8 +876,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       description: 'Comprehensive integration of concepts from previous modules. Focus on portfolio development, examination preparation, and mentorship consolidation.',
       duration: '75 min',
       current: false,
-      locked: true,
-      lockedReason: 'Complete mentor modules examinations to unlock'
+      locked: false,
+      lockedReason: ''
     }
   });
   
