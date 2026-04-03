@@ -103,12 +103,15 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
         <div
           style={{
             width: '65%',
+            minWidth: '65%',
+            maxWidth: '65%',
             padding: '1.75rem 2rem',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             background: '#ffffff',
-            zIndex: 10
+            zIndex: 10,
+            overflow: 'hidden'
           }}
         >
           {/* Slide Indicators */}
@@ -146,7 +149,9 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
               marginBottom: '0.75rem',
               width: 'fit-content',
               maxWidth: '100%',
-              lineHeight: 1.3
+              lineHeight: 1.3,
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word'
             }}
           >
             {activeCard.subtitle}
@@ -172,7 +177,9 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
               color: '#64748b',
               margin: '0 0 1.25rem',
               lineHeight: 1.5,
-              maxWidth: '100%'
+              maxWidth: '100%',
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word'
             }}
           >
             {activeCard.description}
@@ -210,7 +217,9 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
                     fontSize: '0.8rem',
                     fontWeight: 500,
                     color: '#475569',
-                    whiteSpace: 'nowrap'
+                    wordWrap: 'break-word',
+                    overflowWrap: 'break-word',
+                    maxWidth: '100%'
                   }}
                 >
                   {advantage.text}
