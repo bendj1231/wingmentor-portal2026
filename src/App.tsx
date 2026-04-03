@@ -551,13 +551,14 @@ function App() {
     | 'job-database'
     | 'foundational-enrolled'
     | 'program-progress'
-    | 'examination-portal';
+    | 'examination-portal'
+    | 'modules';
 
   const VIEW_WHITELIST: ViewName[] = [
     'login','hub','dashboard','programs','pathways','applications','foundational','atpl','airtaxi','privatesector',
     'foundational-onboarding','post-enrollment-slideshow','ai-screening','remote-segment','terms-conditions','mentorship',
     'reset-password','module-01','module-02','module-03','pilot-profile','recognition','verification','job-database',
-    'foundational-enrolled', 'program-progress', 'examination-portal'
+    'foundational-enrolled', 'program-progress', 'examination-portal', 'modules'
   ];
 
   const [currentView, setCurrentView] = useState<ViewName>('login');
