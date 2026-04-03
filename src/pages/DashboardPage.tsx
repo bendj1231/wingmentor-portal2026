@@ -1432,7 +1432,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </p>
               </div>
               
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', alignItems: 'stretch' }}>
                 {/* Foundational Program Card - Clickable */}
                 <div
                   onClick={() => {
@@ -2002,15 +2002,21 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
             {/* 2. Pilot Recognition */}
             <div style={{ marginBottom: '3rem' }}>
-              {/* Section Header - Matching Programs Format */}
-              <div style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
-                <h2 style={{ fontFamily: 'Georgia, serif', margin: '0 0 0.5rem', fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', fontWeight: 400, color: isDarkMode ? '#f8fafc' : '#0f172a', letterSpacing: '-0.02em' }}>
+              {/* Section Header - Centered with Logo */}
+              <div style={{ textAlign: 'center', marginBottom: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <img src="/logo.png" alt="WingMentor Logo" style={{ maxWidth: '180px', height: 'auto', objectFit: 'contain' }} />
+                </div>
+                
+                <div style={{ color: '#2563eb', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '0.75rem' }}>
+                  Your Pilot Digital Footprint to Pathways
+                </div>
+                
+                <h2 style={{ fontFamily: 'Georgia, serif', margin: '0 0 0.75rem', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 400, color: isDarkMode ? '#f8fafc' : '#0f172a', letterSpacing: '-0.02em' }}>
                   Pilot Recognition & Achievements
                 </h2>
-                <p style={{ letterSpacing: '0.2em', color: '#2563eb', fontWeight: 600, fontSize: '0.75rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
-                  Your Pilot Digital Footprint to Pathways
-                </p>
-                <p style={{ margin: '0', color: isDarkMode ? '#94a3b8' : '#64748b', lineHeight: 1.6, fontSize: '0.95rem', maxWidth: '500px' }}>
+                
+                <p style={{ margin: '0', color: isDarkMode ? '#94a3b8' : '#64748b', lineHeight: 1.6, fontSize: '1rem', maxWidth: '600px' }}>
                   View your awards, flight hours, certifications, and professional milestones earned through your training journey.
                 </p>
               </div>
