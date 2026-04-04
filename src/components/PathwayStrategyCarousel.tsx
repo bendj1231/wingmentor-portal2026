@@ -91,6 +91,17 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
+      {/* CSS Styles */}
+      <style>{`
+        .content-fade {
+          opacity: 1;
+          transition: opacity 300ms ease;
+        }
+        .content-fade.transitioning {
+          opacity: 0;
+        }
+      `}</style>
+
       {/* Main Content Container */}
       <div
         style={{
@@ -101,6 +112,7 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
       >
           {/* Left Side - Content (65%) */}
         <div
+          className={`content-fade ${isTransitioning ? 'transitioning' : ''}`}
           style={{
             width: '65%',
             minWidth: '65%',
@@ -122,13 +134,19 @@ export const PathwayStrategyCarousel: React.FC<PathwayStrategyCarouselProps> = (
                 key={index}
                 onClick={() => goToSlide(index)}
                 style={{
-                  width: index === activeIndex ? '2rem' : '0.5rem',
-                  height: '0.5rem',
+                  width: index === activeIndex ? '2.5rem' : '0.5rem',
+                  height: index === activeIndex ? '0.6rem' : '0.5rem',
                   borderRadius: '999px',
                   border: 'none',
-                  background: index === activeIndex ? '#3b82f6' : '#e2e8f0',
+                  background: index === activeIndex 
+                    ? 'linear-gradient(90deg, #3b82f6, #2563eb)' 
+                    : '#e2e8f0',
                   cursor: 'pointer',
-                  transition: 'all 0.3s ease'
+                  transition: 'all 0.3s ease',
+                  boxShadow: index === activeIndex 
+                    ? '0 0 12px rgba(59, 130, 246, 0.8), 0 0 20px rgba(37, 99, 235, 0.4)' 
+                    : 'none',
+                  transform: index === activeIndex ? 'scale(1.1)' : 'scale(1)'
                 }}
               />
             ))}

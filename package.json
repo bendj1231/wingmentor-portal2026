@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.99.1",
     "firebase": "^12.9.0",
     "firebase-admin": "^13.7.0",
+    "framer-motion": "^12.38.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-pageflip": "^2.0.3",

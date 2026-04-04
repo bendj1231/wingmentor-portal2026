@@ -26,25 +26,14 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [visibleBullets, setVisibleBullets] = useState<number[]>([]);
-  const [showDirectory, setShowDirectory] = useState(false);
 
   const goToSlide = useCallback((index: number) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setVisibleBullets([]);
     setActiveIndex(index);
     
-    // Stagger in bullets after slide change - reduced animations
-    const bulletsCount = cards[index]?.advantages?.length || 0;
-    for (let i = 0; i < bulletsCount; i++) {
-      setTimeout(() => {
-        setVisibleBullets(prev => [...prev, i]);
-      }, 50 + i * 80); // Faster animation
-    }
-    
-    setTimeout(() => setIsTransitioning(false), 400); // Reduced from 800ms
-  }, [isTransitioning, cards]);
+    setTimeout(() => setIsTransitioning(false), 400);
+  }, [isTransitioning]);
 
   const nextSlide = useCallback(() => {
     const next = (activeIndex + 1) % cards.length;
@@ -56,25 +45,17 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
     goToSlide(prev);
   }, [activeIndex, cards.length, goToSlide]);
 
-  // Auto-play - reduced frequency for performance
+  // Auto-play - use refs to avoid re-renders
   useEffect(() => {
     if (!autoPlay || isPaused) return;
-    const timer = setInterval(nextSlide, 10000); // Increased to 10 seconds
+    const timer = setInterval(() => {
+      setActiveIndex(prev => (prev + 1) % cards.length);
+    }, autoPlayInterval || 5000);
     return () => clearInterval(timer);
-  }, [autoPlay, autoPlayInterval, isPaused, nextSlide]);
-
-  // Initial bullet animation
-  useEffect(() => {
-    const bulletsCount = cards[activeIndex]?.advantages?.length || 0;
-    setVisibleBullets([]);
-    for (let i = 0; i < bulletsCount; i++) {
-      setTimeout(() => {
-        setVisibleBullets(prev => [...prev, i]);
-      }, 100 + i * 150);
-    }
-  }, [activeIndex, cards]);
+  }, [autoPlay, isPaused, cards.length, autoPlayInterval]);
 
   const activeCard = cards[activeIndex];
+  const progressPercent = ((activeIndex + 1) / cards.length) * 100;
 
   return (
     <div
@@ -89,6 +70,29 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
+      {/* CSS for bullet animations */}
+      <style>{`
+        .pathway-bullet {
+          opacity: 0;
+          transform: translateX(-20px);
+          animation: bulletIn 0.4s ease forwards;
+          animation-delay: var(--delay, 0ms);
+        }
+        @keyframes bulletIn {
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        .content-fade {
+          opacity: 1;
+          transition: opacity 300ms ease;
+        }
+        .content-fade.transitioning {
+          opacity: 0;
+        }
+      `}</style>
+      
       {/* Background Image - Static, no animation for performance */}
       <div
         style={{
@@ -120,8 +124,9 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
       />
 
 
-      {/* Left Side - Content Area (100%) */}
+      {/* Content Area with Fade Transition */}
       <div
+        className={`content-fade ${isTransitioning ? 'transitioning' : ''}`}
         style={{
           position: 'absolute',
           left: 0,
@@ -149,13 +154,19 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
               key={index}
               onClick={() => goToSlide(index)}
               style={{
-                width: index === activeIndex ? '2rem' : '0.5rem',
-                height: '0.5rem',
+                width: index === activeIndex ? '2.5rem' : '0.5rem',
+                height: index === activeIndex ? '0.6rem' : '0.5rem',
                 borderRadius: '999px',
                 border: 'none',
-                background: index === activeIndex ? '#60a5fa' : 'rgba(255,255,255,0.4)',
+                background: index === activeIndex 
+                  ? 'linear-gradient(90deg, #60a5fa, #3b82f6)' 
+                  : 'rgba(255,255,255,0.4)',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                boxShadow: index === activeIndex 
+                  ? '0 0 12px rgba(96, 165, 250, 0.8), 0 0 20px rgba(59, 130, 246, 0.4)' 
+                  : 'none',
+                transform: index === activeIndex ? 'scale(1.1)' : 'scale(1)'
               }}
             />
           ))}
@@ -189,20 +200,19 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
           {activeCard.title}
         </h3>
 
-        {/* Strategic Advantages - Bullet List with Title/Description stacking */}
+        {/* Strategic Advantages - CSS-driven animation, no React state */}
         <div style={{ marginTop: '0.5rem' }}>
           {(activeCard.advantages || []).map((advantage, index) => (
             <div
               key={index}
+              className="pathway-bullet"
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '0.75rem',
                 marginBottom: '1rem',
-                opacity: visibleBullets.includes(index) ? 1 : 0,
-                transform: visibleBullets.includes(index) ? 'translateX(0)' : 'translateX(-20px)',
-                transition: `opacity 400ms ease ${index * 100}ms, transform 400ms ease ${index * 100}ms`
-              }}
+                '--delay': `${index * 100}ms`,
+              } as React.CSSProperties}
             >
               <span
                 style={{
@@ -243,116 +253,6 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
         </div>
       </div>
 
-
-      {/* Directory Button - Bottom Right */}
-      <div style={{ position: 'absolute', bottom: '1.5rem', right: '1.5rem', zIndex: 30 }}>
-        <button
-          onClick={() => activeCard.onClick?.()}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.75rem 1.25rem',
-            borderRadius: '10px',
-            border: '1px solid rgba(255,255,255,0.3)',
-            background: 'rgba(255,255,255,0.15)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            color: '#fff',
-            fontSize: '0.9rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
-          }}
-        >
-          Discover Pathway
-          <Icons.ArrowRight style={{ width: 18, height: 18 }} />
-        </button>
-
-        {/* Directory Dropdown */}
-        {showDirectory && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 'calc(100% + 0.5rem)',
-              right: 0,
-              width: '280px',
-              background: 'rgba(15, 23, 42, 0.95)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              borderRadius: '12px',
-              border: '1px solid rgba(255,255,255,0.1)',
-              padding: '1rem',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.4)'
-            }}
-          >
-            <p
-              style={{
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: '#94a3b8',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                margin: '0 0 0.75rem 0'
-              }}
-            >
-              All Pathways
-            </p>
-            {cards.map((card, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  goToSlide(idx);
-                  setShowDirectory(false);
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  width: '100%',
-                  padding: '0.75rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: idx === activeIndex ? 'rgba(96, 165, 250, 0.2)' : 'transparent',
-                  color: idx === activeIndex ? '#60a5fa' : '#e2e8f0',
-                  fontSize: '0.9rem',
-                  fontWeight: idx === activeIndex ? 600 : 400,
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (idx !== activeIndex) {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (idx !== activeIndex) {
-                    e.currentTarget.style.background = 'transparent';
-                  }
-                }}
-              >
-                <span
-                  style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    background: idx === activeIndex ? '#60a5fa' : '#475569',
-                    flexShrink: 0
-                  }}
-                />
-                {card.title}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
 
       {/* Navigation Arrows */}
       <button
@@ -421,24 +321,25 @@ export const PathwaysCarousel: React.FC<PathwaysCarouselProps> = ({
 
       {/* Progress Bar */}
       <div
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: '3px',
-          background: 'rgba(255,255,255,0.1)',
-          zIndex: 20
-        }}
-      >
-        <div
           style={{
-            height: '100%',
-            width: `${((activeIndex + 1) / cards.length) * 100}%`,
-            background: 'linear-gradient(90deg, #60a5fa, #3b82f6)',
-            transition: 'width 0.3s ease'
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            background: 'rgba(255,255,255,0.1)',
+            zIndex: 20
           }}
-        />
+        >
+          <div
+            className="progress-bar-fill"
+            style={{
+              height: '100%',
+              width: `${progressPercent}%`,
+              background: 'linear-gradient(90deg, #60a5fa, #3b82f6)',
+              willChange: 'width'
+            }}
+          />
       </div>
     </div>
   );
